@@ -246,3 +246,38 @@ button:disabled {
     max-width: 100%;
   }
 }
+
+/* Painel de Recompensas */
+
+.grade-recompensas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.indicador-recompensa {
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+.indicador-recompensa h2 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+.valor-recompensa {
+  color: #14532d;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.secao-recompensas {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #cbd5e1;
+}
