@@ -10,8 +10,8 @@ export default function BeneficiarioHome() {
 
       <p>Bem-vindo, {usuario.nome}.</p>
       <p>
-        Consulte os lotes de doação cadastrados e acesse a área de solicitação
-        do cidadão.
+        Consulte os lotes de doação cadastrados e registre uma solicitação
+        fictícia para testar a resposta simulada.
       </p>
 
       <nav aria-label="Ações do beneficiário">
@@ -36,8 +36,12 @@ export default function BeneficiarioHome() {
           Não há sincronização com outros dispositivos.
         </p>
         <p>
-          A consulta não confirma reserva, recebimento ou segurança para consumo.
-          A área de solicitação do cidadão ainda está em desenvolvimento.
+          A solicitação utiliza IA simulada por regras locais, sem modelo de IA
+          ou integração externa.
+        </p>
+        <p>
+          A consulta e a resposta simulada não confirmam reserva, recebimento
+          ou segurança para consumo.
         </p>
       </aside>
     </section>
