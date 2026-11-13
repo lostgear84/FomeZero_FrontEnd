@@ -197,3 +197,17 @@ npm run build
 ## Evidências de validação
 
 Os testes realizados estão registrados em `EVIDENCIAS_VALIDACAO.md`. Eles incluem login, cadastro, consultas, solicitação simulada, geração de lotes fictícios, lint, build, navegação por teclado, foco visível, responsividade e ampliação.
+
+## Capturas do protótipo
+
+As capturas estão organizadas no [índice de evidências visuais](docs/evidencias/README.md).
+
+A sequência principal da demonstração inclui:
+
+1. [Cadastro do lote](docs/evidencias/04-cadastro-lote.png).
+2. [Consulta pelo Doador](docs/evidencias/06-meus-lotes.png).
+3. [Consulta pelo Beneficiário](docs/evidencias/08-lotes-disponiveis.png).
+4. [Solicitação do cidadão](docs/evidencias/09-solicitacao.png).
+5. [Resposta simulada e ação sugerida](docs/evidencias/10-resposta-simulada.png).
+
+As capturas complementam o relato dos testes e a demonstração ao vivo; não comprovam integrações que permanecem pendentes.

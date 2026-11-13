@@ -76,3 +76,11 @@ Registrar capturas de tela sem dados pessoais reais para:
 - GENAI: assistente de consulta para doadores.
 - IoT: alerta térmico do lote.
 - VCIA: funcionalidade de imagem, sujeita à decisão da equipe.
+
+## Capturas anexadas ao repositório
+
+Consulte o [índice de evidências visuais](docs/evidencias/README.md), com 14 capturas fornecidas pelo operador.
+
+As imagens documentam login, cadastro, áreas dos perfis, formulário de lote, consultas, geração fictícia, solicitação e resposta simulada, painel pendente, visualização móvel e execução de build/lint.
+
+Os resultados dos testes manuais permanecem relatos do operador. Uma captura isolada não comprova persistência após recarga, bloqueio de acesso por perfil ou conformidade completa de acessibilidade.
