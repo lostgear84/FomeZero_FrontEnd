@@ -1,0 +1,25 @@
+FOMEZERO — Front End & Mobile Development (FEMD)
+
+Integrantes:
+- Erick Miguel — RM 564896
+- Leonardo Melo — RM 567097
+- Luna Oliveira — RM 564215
+
+Repositório GitHub:
+https://github.com/lostgear84/FomeZero_FrontEnd.git
+
+Branch principal:
+master
+
+Commit de documentação:
+59d62a2 — docs: adiciona README e evidencias de validacao do FEMD
+
+Instruções de execução:
+cd frontend
+npm install
+npm run dev
+
+Verificações:
+cd frontend
+npm run lint
+npm run build
