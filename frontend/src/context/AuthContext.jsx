@@ -1,14 +1,11 @@
-import { createContext, useContext, useState } from "react";
-
-const AuthContext = createContext(null);
+import { useState } from "react";
+import { AuthContext } from "./auth";
 
 const CONTAS_KEY = "fomezero.contas.v1";
 const SESSAO_KEY = "fomezero.sessao.v1";
 const ITERACOES = 600000;
 
-export function destinoDoPerfil(perfil) {
-  return perfil === "beneficiario" ? "/beneficiario" : "/doador";
-}
+
 
 function lerContas() {
   const texto = localStorage.getItem(CONTAS_KEY);
@@ -159,14 +156,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const contexto = useContext(AuthContext);
-
-  if (!contexto) {
-    throw new Error("useAuth deve ser usado dentro de AuthProvider.");
-  }
-
-  return contexto;
 }

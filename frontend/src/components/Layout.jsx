@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { destinoDoPerfil, useAuth } from "../context/AuthContext";
+import { destinoDoPerfil, useAuth } from "../context/auth";
 
 export default function Layout() {
   const { usuario, sair } = useAuth();

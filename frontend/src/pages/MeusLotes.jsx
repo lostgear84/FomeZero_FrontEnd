@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth";
 import { listarLotesDoDoador } from "../services/lotesService";
 
 function carregarLotes(doadorId) {

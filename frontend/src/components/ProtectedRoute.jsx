@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { destinoDoPerfil, useAuth } from "../context/AuthContext";
+import { destinoDoPerfil, useAuth } from "../context/auth";
 
 export default function ProtectedRoute({ children }) {
   const { usuario } = useAuth();
