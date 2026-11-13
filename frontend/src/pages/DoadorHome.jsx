@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import GeradorLotesDemo from "../components/GeradorLotesDemo";
 
 export default function DoadorHome() {
   const { usuario } = useAuth();
@@ -38,6 +39,8 @@ export default function DoadorHome() {
           direito a pontos e selos.
         </p>
       </aside>
+
+      <GeradorLotesDemo />
     </section>
   );
 }
