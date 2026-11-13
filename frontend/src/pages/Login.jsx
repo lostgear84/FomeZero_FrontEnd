@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { destinoDoPerfil, useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const { entrar } = useAuth();
@@ -9,46 +9,43 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const [processando, setProcessando] = useState(false);
 
-  function handleSubmit(evento) {
+  async function handleSubmit(evento) {
     evento.preventDefault();
     setErro("");
+    setProcessando(true);
 
-    if (!email.trim() || !senha.trim()) {
-      setErro("Informe e-mail e senha para entrar.");
-      return;
+    try {
+      const usuario = await entrar({ email, senha });
+      navigate(destinoDoPerfil(usuario.perfil), { replace: true });
+    } catch (erroLogin) {
+      setErro(erroLogin.message || "Não foi possível entrar.");
+    } finally {
+      setProcessando(false);
     }
-
-    entrar({
-      nome: email.split("@")[0],
-      email,
-      perfil: "doador",
-    });
-
-    navigate("/doador");
   }
 
   return (
     <main className="pagina-autenticacao">
       <h1>Entrar no FOMEZERO</h1>
-
-      <p>
-        Acesso local para demonstração acadêmica. Nenhum dado pessoal real é
-        coletado.
+      <p id="aviso-login">
+        Autenticação local de demonstração. Entre com uma conta fictícia
+        cadastrada neste navegador.
       </p>
 
-      <form onSubmit={handleSubmit} noValidate>
-        <label htmlFor="email">E-mail</label>
+      <form onSubmit={handleSubmit} aria-describedby="aviso-login">
+        <label htmlFor="email">E-mail fictício</label>
         <input
           id="email"
           type="email"
           value={email}
           onChange={(evento) => setEmail(evento.target.value)}
-          autoComplete="email"
+          autoComplete="username"
           required
         />
 
-        <label htmlFor="senha">Senha</label>
+        <label htmlFor="senha">Senha de demonstração</label>
         <input
           id="senha"
           type="password"
@@ -58,18 +55,14 @@ export default function Login() {
           required
         />
 
-        {erro && (
-          <p className="mensagem-erro" role="alert">
-            {erro}
-          </p>
-        )}
+        {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
-        <button type="submit">Entrar</button>
+        <button type="submit" disabled={processando}>
+          {processando ? "Entrando..." : "Entrar"}
+        </button>
       </form>
 
-      <p>
-        Não possui conta? <Link to="/cadastro">Criar conta</Link>
-      </p>
+      <p>Não possui conta? <Link to="/cadastro">Criar conta</Link></p>
     </main>
   );
 }

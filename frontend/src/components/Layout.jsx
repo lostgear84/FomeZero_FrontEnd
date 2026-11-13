@@ -1,57 +1,56 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { destinoDoPerfil, useAuth } from "../context/AuthContext";
 
 export default function Layout() {
   const { usuario, sair } = useAuth();
   const navigate = useNavigate();
+  const doador = usuario?.perfil === "doador";
 
   function handleSair() {
     sair();
-    navigate("/login");
+    navigate("/login", { replace: true });
   }
 
   return (
     <div className="layout">
+      <a href="#conteudo-principal">Ir para o conteúdo principal</a>
+
       <header className="cabecalho">
-        <Link to="/" className="marca">
+        <Link to={destinoDoPerfil(usuario.perfil)} className="marca">
           FOMEZERO
         </Link>
 
         <nav aria-label="Navegação principal">
           <ul className="menu">
-            <li>
-              <NavLink to="/doador">Doador</NavLink>
-            </li>
-            <li>
-              <NavLink to="/beneficiario">Beneficiário</NavLink>
-            </li>
-            <li>
-              <NavLink to="/recompensas">Recompensas</NavLink>
-            </li>
+            {doador ? (
+              <>
+                <li><NavLink to="/doador" end>Doador</NavLink></li>
+                <li><NavLink to="/recompensas">Recompensas</NavLink></li>
+              </>
+            ) : (
+              <li>
+                <NavLink to="/beneficiario">Beneficiário</NavLink>
+              </li>
+            )}
           </ul>
         </nav>
 
-        {usuario ? (
-          <div className="usuario">
-            <span>{usuario.nome}</span>
-            <button type="button" onClick={handleSair}>
-              Sair
-            </button>
-          </div>
-        ) : (
-          <Link to="/login" className="botao-entrar">
-            Entrar
-          </Link>
-        )}
+        <div className="usuario">
+          <span>
+            {usuario.nome} — {doador ? "Doador" : "Beneficiário"}
+          </span>
+          <button type="button" onClick={handleSair}>Sair</button>
+        </div>
       </header>
 
-      <main className="conteudo">
+      <main id="conteudo-principal" className="conteudo" tabIndex={-1}>
         <Outlet />
       </main>
 
       <footer className="rodape">
         <p>
-          FOMEZERO — protótipo acadêmico. Os dados são locais e sintéticos.
+          FOMEZERO — protótipo acadêmico. Cadastros locais de demonstração;
+          use somente dados fictícios.
         </p>
       </footer>
     </div>
