@@ -134,3 +134,115 @@ button:focus-visible {
   outline: 3px solid #2563eb;
   outline-offset: 2px;
 }
+
+/* Área do Doador e cadastro local de lotes */
+
+.formulario-lote {
+  max-width: 40rem;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid #9ca3af;
+  border-radius: 0.5rem;
+  font: inherit;
+  resize: vertical;
+}
+
+input,
+select,
+textarea {
+  min-width: 0;
+  max-width: 100%;
+}
+
+small {
+  color: #374151;
+}
+
+input[readonly] {
+  background-color: #e5e7eb;
+}
+
+.acoes-doador {
+  display: grid;
+  gap: 0.75rem;
+  padding-left: 1.25rem;
+}
+
+.aviso-local {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-left: 4px solid #166534;
+  background-color: #eaf3ec;
+}
+
+.campo-busca {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 40rem;
+}
+
+.lista-lotes {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.cartao-lote {
+  padding: 1.25rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+.cartao-lote h2 {
+  margin-top: 0;
+}
+
+.cartao-lote dt {
+  margin-top: 0.75rem;
+  font-weight: 600;
+}
+
+.cartao-lote dd {
+  margin-left: 0;
+}
+
+.texto-preservado {
+  white-space: pre-wrap;
+}
+
+.mensagem-sucesso {
+  padding: 0.75rem;
+  border: 1px solid #166534;
+  border-radius: 0.5rem;
+  background-color: #eaf3ec;
+  color: #14532d;
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+@media (max-width: 640px) {
+  .cabecalho,
+  .menu,
+  .usuario {
+    flex-wrap: wrap;
+  }
+
+  .conteudo {
+    padding: 1rem;
+  }
+
+  .pagina-autenticacao {
+    margin: 1rem;
+    max-width: 100%;
+  }
+}
