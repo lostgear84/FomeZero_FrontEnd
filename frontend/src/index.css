@@ -1,9 +1,20 @@
 :root {
   color-scheme: light;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  background-color: #f5f7f5;
-  color: #1f2937;
+  font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.65;
+  font-weight: 400;
+  color: #2b2d42;
+  background: #f7f3e3;
+
+  --petroleo: #0f4c5c;
+  --turquesa: #00a6a6;
+  --creme: #f7f3e3;
+  --pessego: #f4a261;
+  --texto: #2b2d42;
+  --secundario: #52606b;
+  --borda: #cbd5d8;
+  --superficie: #ffffff;
+  --sombra: 0 8px 28px rgb(15 76 92 / 7%);
 }
 
 * {
@@ -12,85 +23,199 @@
 
 body {
   margin: 0;
+  min-width: 0;
   min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 a {
-  color: #166534;
+  color: var(--petroleo);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
 }
 
-button {
-  font: inherit;
-  cursor: pointer;
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--texto);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.85rem, 4vw, 2.65rem);
+  letter-spacing: -0.035em;
+}
+
+h2 {
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+:focus-visible {
+  outline: 3px solid var(--petroleo);
+  outline-offset: 4px;
 }
 
 .layout {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+}
+
+/* O link de salto continua disponível no teclado. */
+.layout > a[href="#conteudo-principal"] {
+  position: absolute;
+  top: 0.75rem;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  color: var(--petroleo);
+  transform: translateY(-180%);
+}
+
+.layout > a[href="#conteudo-principal"]:focus {
+  transform: translateY(0);
 }
 
 .cabecalho {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: #14532d;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  padding: 1.1rem max(1.25rem, calc((100% - 72rem) / 2));
+  border-bottom: 4px solid var(--turquesa);
+  background: var(--petroleo);
   color: #ffffff;
 }
 
 .marca {
   color: #ffffff;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-decoration: none;
 }
 
 .menu {
   display: flex;
-  gap: 1rem;
-  list-style: none;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 .menu a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
   color: #ffffff;
   text-decoration: none;
 }
 
-.menu a:hover,
-.menu a:focus-visible {
-  text-decoration: underline;
+.menu a:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
+.menu a[aria-current="page"] {
+  border-color: rgb(255 255 255 / 35%);
+  background: rgb(255 255 255 / 15%);
+  font-weight: 700;
+}
+
+.cabecalho :focus-visible {
+  outline-color: var(--creme);
 }
 
 .usuario {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  min-width: 0;
+  font-size: 0.9rem;
+}
+
+.usuario span {
+  overflow-wrap: anywhere;
+}
+
+.usuario button {
+  border: 1px solid rgb(255 255 255 / 45%);
+  background: transparent;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.usuario button:hover {
+  border-color: var(--pessego);
+  background: rgb(255 255 255 / 10%);
 }
 
 .conteudo {
   flex: 1;
   width: 100%;
-  max-width: 64rem;
+  max-width: 72rem;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 2.75rem 1.5rem 3.5rem;
+}
+
+.conteudo > section > a:first-child {
+  display: inline-block;
+  margin-bottom: 1.25rem;
 }
 
 .rodape {
-  padding: 1rem;
-  background-color: #e5e7eb;
+  padding: 1.4rem;
+  border-top: 1px solid var(--borda);
+  background: #eeeee6;
+  color: var(--secundario);
   text-align: center;
+  font-size: 0.85rem;
+}
+
+.rodape p {
+  max-width: 65rem;
+  margin: 0 auto;
 }
 
 .pagina-autenticacao {
-  max-width: 24rem;
+  width: calc(100% - 2rem);
+  max-width: 29rem;
   margin: 3rem auto;
-  padding: 1.5rem;
-  background-color: #ffffff;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  border: 1px solid var(--borda);
+  border-top: 5px solid var(--turquesa);
+  border-radius: 1rem;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+}
+
+.pagina-autenticacao h1 {
+  font-size: 2rem;
 }
 
 form {
@@ -100,54 +225,7 @@ form {
 }
 
 label {
-  font-weight: 600;
-}
-
-input,
-select {
-  padding: 0.65rem;
-  border: 1px solid #9ca3af;
-  border-radius: 0.5rem;
-  font: inherit;
-}
-
-button {
-  padding: 0.7rem 1rem;
-  border: none;
-  border-radius: 0.5rem;
-  background-color: #166534;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-button:hover,
-button:focus-visible {
-  background-color: #14532d;
-}
-
-.mensagem-erro {
-  color: #b91c1c;
-  font-weight: 600;
-}
-
-:focus-visible {
-  outline: 3px solid #2563eb;
-  outline-offset: 2px;
-}
-
-/* Área do Doador e cadastro local de lotes */
-
-.formulario-lote {
-  max-width: 40rem;
-}
-
-textarea {
-  width: 100%;
-  padding: 0.65rem;
-  border: 1px solid #9ca3af;
-  border-radius: 0.5rem;
-  font: inherit;
-  resize: vertical;
+  font-weight: 650;
 }
 
 input,
@@ -155,27 +233,125 @@ select,
 textarea {
   min-width: 0;
   max-width: 100%;
+  padding: 0.8rem 0.95rem;
+  border: 1px solid #87979f;
+  border-radius: 0.65rem;
+  background: #ffffff;
+  color: var(--texto);
 }
 
-small {
-  color: #374151;
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  width: 100%;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #627079;
+  opacity: 1;
+}
+
+textarea {
+  min-height: 8rem;
+  resize: vertical;
 }
 
 input[readonly] {
-  background-color: #e5e7eb;
+  background: #edf1f2;
+  color: #46545e;
 }
 
+small {
+  color: var(--secundario);
+  line-height: 1.6;
+}
+
+button {
+  min-height: 46px;
+  padding: 0.8rem 1.15rem;
+  border: 1px solid var(--petroleo);
+  border-radius: 0.65rem;
+  background: var(--petroleo);
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+
+button:hover {
+  background: #093945;
+  box-shadow: 0 4px 12px rgb(15 76 92 / 15%);
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.formulario-lote {
+  max-width: 44rem;
+  padding: clamp(1.1rem, 4vw, 2rem);
+  border: 1px solid var(--borda);
+  border-radius: 1rem;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+}
+
+/* Os links existentes passam a ter apresentação de cards. */
 .acoes-doador {
   display: grid;
-  gap: 0.75rem;
-  padding-left: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acoes-doador li {
+  min-width: 0;
+}
+
+.acoes-doador a {
+  display: flex;
+  align-items: center;
+  min-height: 7rem;
+  height: 100%;
+  padding: 1.4rem;
+  border: 1px solid var(--borda);
+  border-top: 4px solid var(--turquesa);
+  border-radius: 0.85rem;
+  background: var(--superficie);
+  color: var(--petroleo);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--sombra);
+}
+
+.acoes-doador a:hover {
+  border-color: var(--petroleo);
+  text-decoration: underline;
 }
 
 .aviso-local {
-  margin-top: 2rem;
-  padding: 1rem;
-  border-left: 4px solid #166534;
-  background-color: #eaf3ec;
+  margin-top: 1.75rem;
+  padding: clamp(1.1rem, 3vw, 1.75rem);
+  border: 1px solid #b8d6d4;
+  border-left: 4px solid var(--turquesa);
+  border-radius: 0.75rem;
+  background: #edf6f3;
+}
+
+.aviso-local h2 {
+  margin-top: 0;
+  color: var(--petroleo);
+}
+
+.aviso-local > :last-child {
+  margin-bottom: 0;
 }
 
 .campo-busca {
@@ -183,120 +359,282 @@ input[readonly] {
   flex-direction: column;
   gap: 0.5rem;
   max-width: 40rem;
+  margin: 1.25rem 0;
 }
 
 .lista-lotes {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
   padding: 0;
   list-style: none;
 }
 
 .cartao-lote {
-  padding: 1.25rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.75rem;
-  background-color: #ffffff;
+  min-width: 0;
+  padding: clamp(1.25rem, 3vw, 1.8rem);
+  border: 1px solid var(--borda);
+  border-radius: 1rem;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
   overflow-wrap: anywhere;
 }
 
 .cartao-lote h2 {
   margin-top: 0;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #e3e9e9;
+  color: var(--petroleo);
 }
 
 .cartao-lote dt {
-  margin-top: 0.75rem;
-  font-weight: 600;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .cartao-lote dd {
-  margin-left: 0;
+  margin: 0.2rem 0 0;
 }
 
 .texto-preservado {
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.mensagem-erro {
+  padding: 0.85rem 1rem;
+  border: 1px solid #c87878;
+  border-radius: 0.6rem;
+  background: #fff1f1;
+  color: #912525;
+  font-weight: 600;
 }
 
 .mensagem-sucesso {
-  padding: 0.75rem;
-  border: 1px solid #166534;
-  border-radius: 0.5rem;
-  background-color: #eaf3ec;
-  color: #14532d;
+  padding: 0.85rem 1rem;
+  border: 1px solid #8dbcb5;
+  border-radius: 0.6rem;
+  background: #e8f4ef;
+  color: var(--petroleo);
 }
-
-button:disabled {
-  opacity: 0.65;
-  cursor: wait;
-}
-
-@media (max-width: 640px) {
-  .cabecalho,
-  .menu,
-  .usuario {
-    flex-wrap: wrap;
-  }
-
-  .conteudo {
-    padding: 1rem;
-  }
-
-  .pagina-autenticacao {
-    margin: 1rem;
-    max-width: 100%;
-  }
-}
-
-/* Painel de Recompensas */
 
 .grade-recompensas {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
 }
 
 .indicador-recompensa {
   min-width: 0;
-  padding: 1.25rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.75rem;
-  background-color: #ffffff;
+  padding: 1.6rem;
+  border: 1px solid var(--borda);
+  border-top: 4px solid var(--pessego);
+  border-radius: 1rem;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
   overflow-wrap: anywhere;
 }
 
 .indicador-recompensa h2 {
   margin-top: 0;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
 }
 
 .valor-recompensa {
-  color: #14532d;
-  font-size: 1.2rem;
-  font-weight: 700;
+  color: var(--petroleo);
+  font-size: 1.25rem;
+  font-weight: 750;
 }
 
 .secao-recompensas {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #cbd5e1;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--borda);
 }
-
-/* Confirmação da geração de dados fictícios */
 
 .confirmacao-demo {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
+  margin: 1.25rem 0;
 }
 
 .confirmacao-demo input {
   flex: 0 0 auto;
-  margin-top: 0.35rem;
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-top: 0.25rem;
+  accent-color: var(--petroleo);
 }
 
-button:disabled {
-  cursor: not-allowed;
+@media (max-width: 640px) {
+  .cabecalho {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .cabecalho nav {
+    order: 3;
+    width: 100%;
+  }
+
+  .menu {
+    gap: 0.5rem;
+  }
+
+  .usuario {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .usuario span {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .conteudo {
+    padding: 1.75rem 1rem 2.5rem;
+  }
+
+  .pagina-autenticacao {
+    margin: 1.5rem auto;
+  }
+
+  .acoes-doador a {
+    min-height: 5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none;
+  }
+}
+
+/* PALETA FOMEZERO — DISTRIBUICAO COMPLETA */
+
+/* Marca com detalhe pêssego, mantendo o texto original. */
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--creme);
+}
+
+.marca::before {
+  content: "";
+  width: 0.8rem;
+  height: 0.8rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--pessego);
+}
+
+/* Navegação ativa com contraste entre creme e petróleo. */
+.menu a[aria-current="page"] {
+  border-color: var(--creme);
+  background: var(--creme);
+  color: var(--petroleo);
+}
+
+.usuario button {
+  border-color: var(--pessego);
+  background: var(--pessego);
+  color: var(--texto);
+}
+
+.usuario button:hover {
+  border-color: var(--creme);
+  background: var(--creme);
+  color: var(--texto);
+}
+
+/* Cada ação recebe uma cor da identidade. */
+.acoes-doador a {
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  min-height: 8rem;
+  padding: 1.5rem;
+  font-size: 1.15rem;
+  box-shadow: 0 8px 20px rgb(43 45 66 / 10%);
+}
+
+.acoes-doador li:nth-child(3n + 1) a {
+  background: var(--petroleo);
+  color: var(--creme);
+}
+
+.acoes-doador li:nth-child(3n + 2) a {
+  background: var(--turquesa);
+  color: var(--texto);
+}
+
+.acoes-doador li:nth-child(3n + 3) a {
+  background: var(--pessego);
+  color: var(--texto);
+}
+
+.acoes-doador a:hover {
+  border-color: var(--texto);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  box-shadow: 0 10px 24px rgb(43 45 66 / 17%);
+}
+
+/* Autenticação: pêssego com presença real, não apenas uma borda. */
+.pagina-autenticacao {
+  border-top: 6px solid var(--petroleo);
+  background: linear-gradient(
+    to bottom,
+    var(--pessego) 0,
+    var(--pessego) 0.85rem,
+    #ffffff 0.85rem,
+    #ffffff 100%
+  );
+}
+
+/* Formulários mantêm leitura neutra e detalhe turquesa. */
+.formulario-lote {
+  border-top: 5px solid var(--turquesa);
+}
+
+/* Avisos continuam suaves para não competir com as ações. */
+.aviso-local {
+  border-left-width: 5px;
+  border-left-color: var(--turquesa);
+  background: #e4f1ed;
+}
+
+/* Cartões de dados preservam uma superfície clara. */
+.cartao-lote {
+  border-top: 4px solid var(--petroleo);
+}
+
+.cartao-lote h2 {
+  color: var(--petroleo);
+}
+
+/* Pêssego identifica a área de indicadores ainda pendentes. */
+.indicador-recompensa {
+  border-top: 5px solid var(--pessego);
+  background: #fff6ec;
+}
+
+/* Azul-escuro passa a fazer parte da estrutura da página. */
+.rodape {
+  border-top: 4px solid var(--pessego);
+  background: var(--texto);
+  color: var(--creme);
+}
+
+.rodape a {
+  color: var(--creme);
+}
+
+@media (max-width: 640px) {
+  .acoes-doador a {
+    min-height: 6rem;
+    padding: 1.25rem;
+  }
 }
