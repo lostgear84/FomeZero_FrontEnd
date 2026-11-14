@@ -101,7 +101,7 @@ frontend/src/
 |---|---|---|
 | `/login` | Público | Login local |
 | `/cadastro` | Público | Cadastro de Doador ou Beneficiário |
-| `/` | Protegida | Redireciona ou apresenta a área conforme o perfil |
+| `/` | Protegida | Redireciona para a área correspondente ao perfil |
 | `/doador` | Protegida | Área inicial do Doador |
 | `/doador/cadastro-lote` | Protegida | Cadastro de lote de doação |
 | `/doador/meus-lotes` | Protegida | Consulta dos lotes do Doador |
@@ -109,9 +109,9 @@ frontend/src/
 | `/beneficiario/lotes-disponiveis` | Protegida | Consulta de lotes disponíveis |
 | `/beneficiario/solicitacao` | Protegida | Solicitação do cidadão |
 | `/recompensas` | Protegida | Painel de Recompensas do Doador |
-| `*` | Público | Redireciona para o login |
+| `*` | Público | Renderiza a tela de login para caminhos não reconhecidos |
 
-O componente `ProtectedRoute` verifica a sessão antes de renderizar o conteúdo protegido. Usuários não autenticados são direcionados para `/login`.
+O componente `ProtectedRoute` verifica a sessão e restringe as áreas por perfil antes de renderizar o conteúdo protegido. Usuários não autenticados são direcionados para `/login`; usuários autenticados que tentam acessar a área de outro perfil são direcionados para sua própria área.
 
 ## Cadastro e consulta de lotes
 
@@ -154,7 +154,7 @@ Esses testes são uma revisão manual inicial. Não representam uma certificaç�
 - O protótipo utiliza dados fictícios.
 - Não são coletados dados pessoais reais de beneficiários.
 - Os cadastros, lotes e sessões permanecem no navegador do usuário.
-- Não há envio de dados para servidores externos por esta aplicação.
+- Os fluxos implementados de cadastro, login, consulta, solicitação simulada e importação histórica IoT são locais. Não foi implementado envio desses dados a uma API externa nem conexão MQTT pelo frontend.
 - Não há chaves de API no código ou no repositório.
 - A senha é tratada como dado de demonstração e não como mecanismo de segurança production-ready.
 - Nenhum módulo declara que um alimento é seguro para consumo.
@@ -167,7 +167,7 @@ Esses testes são uma revisão manual inicial. Não representam uma certificaç�
 | ODS 12 — Consumo e Produção Responsáveis | Contribui para reduzir o desperdício ao organizar alimentos que poderiam ser desperdiçados. |
 | ODS 13 — Ação contra a Mudança Global do Clima | Reserva espaço para acompanhamento de impacto ambiental, sem calcular CO₂ sem metodologia validada. |
 
-## Integrações pendentes
+## Situação das integrações
 
 | Integração | Status | Pendência |
 |---|---|---|

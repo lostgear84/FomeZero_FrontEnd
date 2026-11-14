@@ -107,6 +107,9 @@ Os dois eventos pertencem a momentos distintos: normalização anterior
 e novo alerta posterior.
 
 Esta validação não comprova conexão MQTT ao vivo.
-Os cenários de arquivo inválido, tamanho excedido, conta sem lote
-correspondente e valor sentinela de temperatura ainda não têm execução
-de teste confirmada neste registro.
+O teste com JSON inválido foi realizado e confirmado pelo operador:
+o arquivo foi rejeitado e a visualização válida anterior foi preservada.
+
+O teste de arquivo maior que 2 MB não foi realizado, por decisão de escopo.
+Os testes de conta sem lote correspondente e temperatura sentinela ainda
+não têm execução confirmada neste registro.
