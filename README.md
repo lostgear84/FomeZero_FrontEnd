@@ -173,7 +173,7 @@ Esses testes são uma revisão manual inicial. Não representam uma certificaç�
 |---|---|---|
 | AIPA | Pendente | Pontos, Selo Verde ESG, CO₂ evitado, associação de lote e Doador e tratamento de reprocessamento |
 | GENAI | Pendente | Assistente de consulta para doadores |
-| IoT | Pendente | Consumo do alerta térmico do lote |
+| IoT | Parcial — importação histórica implementada | Conexão ao vivo não implementada |
 | VCIA | Pendente | Decisão da equipe sobre onde será hospedada a funcionalidade de imagem |
 
 O Painel de Recompensas permanece com pendências explícitas. Não são exibidos pontos, selos ou valores de CO₂ sem origem, regra e fonte definidas.
@@ -211,3 +211,37 @@ A sequência principal da demonstração inclui:
 5. [Resposta simulada e ação sugerida](docs/evidencias/10-resposta-simulada.png).
 
 As capturas complementam o relato dos testes e a demonstração ao vivo; não comprovam integrações que permanecem pendentes.
+
+## Importação histórica de registros IoT
+
+Na tela Meus lotes, o Doador pode importar um arquivo `.log` ou `.txt`
+com até 2 MB, no formato tópico MQTT seguido de JSON por linha.
+
+### Escopo implementado
+
+- Leitura dos schemas `fomezero.telemetria.v1` e `fomezero.alerta.v1`.
+- Associação ao lote `LOTE-2026-0001` da conta autenticada.
+- Identificação do dispositivo `esp32-caixa-01`.
+- Exibição dos estados informados pelo IoT, sem recalculá-los pela temperatura.
+- Filtro de eventos de alerta e normalização.
+- Campos ausentes apresentados como não informados.
+- Temperatura sentinela `-127` apresentada como falha de leitura.
+- ACKs, status e registros não associados ao lote da conta são ignorados.
+- Registros idênticos repetidos no mesmo arquivo são desconsiderados.
+- Uma nova importação bem-sucedida substitui a visualização anterior.
+- A limpeza da visualização não apaga os lotes cadastrados.
+
+### Limitações
+
+A importação é uma visualização histórica local, não monitoramento ao vivo.
+Os registros importados ficam apenas no estado da tela, sem persistência
+após recarga ou saída da página.
+
+Não há conexão MQTT, publicação de mensagens, alteração do firmware,
+geração de recompensas ou validação sanitária.
+
+A normalização não apaga ocorrências anteriores. O estado `FRIO_OK`
+é uma informação técnica do dispositivo, não garantia de alimento seguro.
+
+O log utilizado na validação foi `mqtt-20261111-102301.log`.
+O arquivo original não é incluído automaticamente no repositório.

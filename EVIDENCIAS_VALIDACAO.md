@@ -74,7 +74,7 @@ Registrar capturas de tela sem dados pessoais reais para:
 
 - AIPA: pontos, selo, CO₂ evitado, associação de lote e Doador e tratamento de reprocessamento.
 - GENAI: assistente de consulta para doadores.
-- IoT: alerta térmico do lote.
+- IoT: importação histórica implementada; conexão ao vivo não implementada.
 - VCIA: funcionalidade de imagem, sujeita à decisão da equipe.
 
 ## Capturas anexadas ao repositório
@@ -84,3 +84,29 @@ Consulte o [índice de evidências visuais](docs/evidencias/README.md), com 14 c
 As imagens documentam login, cadastro, áreas dos perfis, formulário de lote, consultas, geração fictícia, solicitação e resposta simulada, painel pendente, visualização móvel e execução de build/lint.
 
 Os resultados dos testes manuais permanecem relatos do operador. Uma captura isolada não comprova persistência após recarga, bloqueio de acesso por perfil ou conformidade completa de acessibilidade.
+
+## Validação da importação histórica IoT — 14/11/2026
+
+Testes manuais realizados e confirmados por Erick Miguel.
+
+Arquivo utilizado: `mqtt-20261111-102301.log`.
+
+| Teste | Resultado observado |
+|---|---|
+| Importação do log na conta vinculada ao lote | Registros apresentados na interface |
+| Filtro de alertas e normalização | Dois eventos exibidos |
+| Normalização | Registro de 11/11/2026 às 13:24:39Z, com 4 °C |
+| Alerta posterior | Registro de 11/11/2026 às 13:32:35Z, com 8,2 °C, limite de 5 °C, duração de 31 s e severidade alta |
+| Campos ausentes | Apresentados como não informados |
+| Reimportação do mesmo arquivo | Continuam dois eventos filtrados, sem acumular a importação anterior |
+| Limpeza da visualização | Registros importados removidos; lotes cadastrados preservados |
+| Lint | Executado sem erros reportados |
+| Build | Concluído com sucesso |
+
+Os dois eventos pertencem a momentos distintos: normalização anterior
+e novo alerta posterior.
+
+Esta validação não comprova conexão MQTT ao vivo.
+Os cenários de arquivo inválido, tamanho excedido, conta sem lote
+correspondente e valor sentinela de temperatura ainda não têm execução
+de teste confirmada neste registro.

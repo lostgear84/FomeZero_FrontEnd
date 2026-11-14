@@ -1,3 +1,4 @@
+import ImportadorIot from "../components/ImportadorIot";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/auth";
@@ -62,6 +63,8 @@ export default function MeusLotes() {
       <Link to="/doador">Voltar à área do Doador</Link>
 
       <h1 id="titulo-meus-lotes">Meus lotes de doação</h1>
+
+      {!dados.erro && <ImportadorIot lotes={dados.lotes} />}
 
       {location.state?.mensagem && (
         <p className="mensagem-sucesso" role="status">
