@@ -25,6 +25,11 @@ export default function DoadorHome() {
           <li>
             <Link to="/recompensas">Acessar painel de recompensas</Link>
           </li>
+          <li>
+            <Link to="/doador/assistente">
+              Tirar dúvidas com o assistente (GENAI)
+            </Link>
+          </li>
         </ul>
       </nav>
 
@@ -36,7 +41,8 @@ export default function DoadorHome() {
         </p>
         <p>
           Cadastrar um lote não confirma entrega, segurança para consumo ou
-          direito a pontos e selos.
+          direito a pontos e selos. Pontos e Selo Verde ESG só aparecem depois
+          que o beneficiário registra a entrega e o robô da AIPA processa o lote.
         </p>
       </aside>
 

@@ -638,3 +638,34 @@ button:disabled {
     padding: 1.25rem;
   }
 }
+
+/* Integração GENAI (assistente) e AIPA (recompensas) */
+.lista-sugestoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.lista-sugestoes button {
+  text-align: left;
+}
+
+.progresso-selo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 32rem;
+}
+
+.progresso-selo progress {
+  width: 100%;
+  height: 1.1rem;
+  accent-color: var(--petroleo);
+}
+
+fieldset.formulario-lote {
+  border: 1px solid var(--borda);
+  border-radius: 0.75rem;
+}

@@ -23,7 +23,7 @@ A solução busca apoiar a redução do desperdício, facilitar a consulta de do
 - Doador: restaurante ou mercado responsável pelo cadastro do lote.
 - Beneficiário: ONG, cozinha comunitária ou cidadão que consulta lotes disponíveis.
 - Cidadão: pessoa que realiza uma solicitação e recebe uma resposta e uma ação sugerida.
-- Doador no Painel de Recompensas: acompanhamento de pontos, selo e impacto ambiental pendentes.
+- Doador no Painel de Recompensas: acompanhamento de pontos, Selo Verde ESG e CO₂ evitado (estimativa) calculados pelo robô da AIPA.
 
 ## Escopo do protótipo
 
@@ -43,7 +43,9 @@ A autenticação é local e demonstrativa. Ela permite validar o fluxo de acesso
 - Solicitação do cidadão processada por regras locais simuladas.
 - Exibição de resposta e ação sugerida após o processamento.
 - Geração explícita de lotes fictícios com identificadores `DEMO-`.
-- Painel de Recompensas do Doador, com pendências explícitas para pontos, selo e CO₂ evitado.
+- Registro da entrega do lote pelo Beneficiário, com texto de confirmação, e exportação para o robô da AIPA (JSON).
+- Painel de Recompensas do Doador com os resultados da AIPA importados: pontos, Selo Verde ESG, progresso até o próximo selo, CO₂ evitado (estimativa, com metodologia) e lotes em revisão humana.
+- Assistente de consulta para doadores (GENAI), com respostas citando documentos oficiais, em modo simulado ou integrado.
 
 ## Arquitetura do frontend
 
@@ -57,8 +59,10 @@ frontend/src/
 │   ├── AuthContext.jsx
 │   └── auth.js
 ├── data/
+│   ├── genai_respostas_SIMULADO.json
 │   └── seed.js
 ├── pages/
+│   ├── AssistenteConsulta.jsx
 │   ├── BeneficiarioHome.jsx
 │   ├── Cadastro.jsx
 │   ├── CadastroLote.jsx
@@ -67,8 +71,12 @@ frontend/src/
 │   ├── LotesDisponiveis.jsx
 │   ├── MeusLotes.jsx
 │   ├── PainelRecompensas.jsx
+│   ├── RegistrarEntrega.jsx
 │   └── SolicitacaoCidadao.jsx
 ├── services/
+│   ├── aipaService.js
+│   ├── assistenteService.js
+│   ├── entregasService.js
 │   ├── lotesService.js
 │   └── solicitacaoService.js
 ├── App.jsx
@@ -105,9 +113,11 @@ frontend/src/
 | `/doador` | Protegida | Área inicial do Doador |
 | `/doador/cadastro-lote` | Protegida | Cadastro de lote de doação |
 | `/doador/meus-lotes` | Protegida | Consulta dos lotes do Doador |
+| `/doador/assistente` | Protegida | Assistente de consulta (GENAI) |
 | `/beneficiario` | Protegida | Área inicial do Beneficiário |
 | `/beneficiario/lotes-disponiveis` | Protegida | Consulta de lotes disponíveis |
 | `/beneficiario/solicitacao` | Protegida | Solicitação do cidadão |
+| `/beneficiario/registrar-entrega` | Protegida | Registro da entrega e exportação para a AIPA |
 | `/recompensas` | Protegida | Painel de Recompensas do Doador |
 | `*` | Público | Renderiza a tela de login para caminhos não reconhecidos |
 
@@ -133,7 +143,12 @@ A solicitação do cidadão é processada por regras locais simuladas no serviç
 
 Este processamento é uma simulação baseada em regras, não um modelo de inteligência artificial treinado. A interface identifica essa natureza para não induzir o usuário a erro.
 
-O cálculo de CO₂ não é tratado como processamento inteligente. Ele permanece pendente até que exista uma metodologia e uma fonte validadas.
+O cálculo de CO₂ não é feito pelo frontend. O valor exibido vem do robô da AIPA, como estimativa, com a metodologia e a fonte (FAO, 2013) mostradas no painel; a aprovação do método pelo grupo segue pendente.
+
+Além das regras locais, há dois processamentos com IA de outros módulos do FOMEZERO:
+
+- **Assistente de consulta (GENAI):** RAG sobre o corpus de documentos oficiais da PLN (Lei 15.224/2025, RDC ANVISA 216/2004 e guias da ANVISA). Modo simulado (padrão): as 10 respostas reais gravadas pela GENAI em `src/data/genai_respostas_SIMULADO.json`. Modo integrado: o usuário informa o link do Gradio do notebook da GENAI e o frontend chama o endpoint `/consultar` com `@gradio/client`; se a conexão falhar, a tela avisa e volta ao modo simulado.
+- **Robô pós-entrega (AIPA):** a IA da AIPA lê a confirmação escrita pelo beneficiário, extrai os kg recebidos e identifica ocorrências; casos duvidosos vão para revisão humana. O frontend exporta as entregas e importa o resultado.
 
 ## Acessibilidade
 
@@ -171,12 +186,21 @@ Esses testes são uma revisão manual inicial. Não representam uma certificaç�
 
 | Integração | Status | Pendência |
 |---|---|---|
-| AIPA | Pendente | Pontos, Selo Verde ESG, CO₂ evitado, associação de lote e Doador e tratamento de reprocessamento |
-| GENAI | Pendente | Assistente de consulta para doadores |
+| AIPA | Integrada por arquivos (simulação) | Exportação `lotes_entregues.json` → robô da AIPA → importação `saida/ct04/ct04_lotes.json` no Painel de Recompensas. Regras de pontos e selo de demonstração, pendentes de aprovação do grupo |
+| GENAI | Integrada (simulado e integrado) | Modo integrado depende do notebook da GENAI no Colab (link temporário) |
 | IoT | Parcial — importação histórica implementada | Conexão ao vivo não implementada |
 | VCIA | Pendente | Decisão da equipe sobre onde será hospedada a funcionalidade de imagem |
 
-O Painel de Recompensas permanece com pendências explícitas. Não são exibidos pontos, selos ou valores de CO₂ sem origem, regra e fonte definidas.
+O Painel de Recompensas só exibe pontos, selo e CO₂ evitado que vieram do robô da AIPA, com a regra e a fonte. Sem resultado importado, mostra "Sem pontos lançados" e "Não calculado" (nunca zero).
+
+Fluxo para demonstrar a AIPA:
+
+1. Doador cadastra lotes (ou gera os lotes `DEMO-`).
+2. Beneficiário registra a entrega em `/beneficiario/registrar-entrega` e clica em "Exportar entregas para a AIPA (JSON)".
+3. O arquivo baixado vai para `AIPA/entrada/lotes_entregues.json` no repositório da AIPA (https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_AIPA) e o robô roda com `python executar_robo.py`.
+4. Doador importa `saida/ct04/ct04_lotes.json` no Painel de Recompensas.
+
+Assistente da GENAI: https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_GENAI
 
 ## Execução
 

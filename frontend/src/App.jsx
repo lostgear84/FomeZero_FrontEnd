@@ -11,6 +11,8 @@ import BeneficiarioHome from "./pages/BeneficiarioHome";
 import LotesDisponiveis from "./pages/LotesDisponiveis";
 import SolicitacaoCidadao from "./pages/SolicitacaoCidadao";
 import PainelRecompensas from "./pages/PainelRecompensas";
+import AssistenteConsulta from "./pages/AssistenteConsulta";
+import RegistrarEntrega from "./pages/RegistrarEntrega";
 
 export default function App() {
   return (
@@ -33,6 +35,7 @@ export default function App() {
             <Route path="doador" element={<DoadorHome />} />
             <Route path="doador/cadastro-lote" element={<CadastroLote />} />
             <Route path="doador/meus-lotes" element={<MeusLotes />} />
+            <Route path="doador/assistente" element={<AssistenteConsulta />} />
 
             <Route path="beneficiario" element={<BeneficiarioHome />} />
             <Route
@@ -42,6 +45,10 @@ export default function App() {
             <Route
               path="beneficiario/solicitacao"
               element={<SolicitacaoCidadao />}
+            />
+            <Route
+              path="beneficiario/registrar-entrega"
+              element={<RegistrarEntrega />}
             />
 
             <Route path="recompensas" element={<PainelRecompensas />} />
