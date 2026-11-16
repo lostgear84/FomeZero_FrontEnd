@@ -13,6 +13,8 @@ import SolicitacaoCidadao from "./pages/SolicitacaoCidadao";
 import PainelRecompensas from "./pages/PainelRecompensas";
 import AssistenteConsulta from "./pages/AssistenteConsulta";
 import RegistrarEntrega from "./pages/RegistrarEntrega";
+import TriagemInteligente from "./pages/TriagemInteligente";
+import RevisaoHumana from "./pages/RevisaoHumana";
 
 export default function App() {
   return (
@@ -36,6 +38,7 @@ export default function App() {
             <Route path="doador/cadastro-lote" element={<CadastroLote />} />
             <Route path="doador/meus-lotes" element={<MeusLotes />} />
             <Route path="doador/assistente" element={<AssistenteConsulta />} />
+            <Route path="doador/triagem" element={<TriagemInteligente />} />
 
             <Route path="beneficiario" element={<BeneficiarioHome />} />
             <Route
@@ -52,6 +55,8 @@ export default function App() {
             />
 
             <Route path="recompensas" element={<PainelRecompensas />} />
+
+            <Route path="operador" element={<RevisaoHumana />} />
           </Route>
 
           <Route path="*" element={<Login />} />

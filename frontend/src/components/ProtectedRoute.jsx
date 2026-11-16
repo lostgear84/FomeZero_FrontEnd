@@ -25,9 +25,13 @@ export default function ProtectedRoute({ children }) {
     pathname === "/beneficiario" ||
     pathname.startsWith("/beneficiario/");
 
+  const rotaOperador =
+    pathname === "/operador" || pathname.startsWith("/operador/");
+
   if (
     (rotaDoador && usuario.perfil !== "doador") ||
-    (rotaBeneficiario && usuario.perfil !== "beneficiario")
+    (rotaBeneficiario && usuario.perfil !== "beneficiario") ||
+    (rotaOperador && usuario.perfil !== "operador")
   ) {
     return <Navigate to={destino} replace />;
   }

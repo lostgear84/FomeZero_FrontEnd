@@ -1,16 +1,24 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth";
 import { cadastrarLote } from "../services/lotesService";
+import { AVISO_TRIAGEM, ehDeterioracao } from "../services/triagemService";
 
 export default function CadastroLote() {
   const { usuario } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const triagem = location.state?.triagem || null;
+  const destinoCompostagem = Boolean(
+    triagem && ehDeterioracao({ condicao: { classe: triagem.classe }, inconclusivo: triagem.inconclusivo }),
+  );
 
   const [loteId, setLoteId] = useState("");
   const [alimento, setAlimento] = useState("");
   const [quantidadeKg, setQuantidadeKg] = useState("");
-  const [condicaoInformada, setCondicaoInformada] = useState("");
+  const [condicaoInformada, setCondicaoInformada] = useState(
+    triagem?.texto_sugerido || "",
+  );
   const [erro, setErro] = useState("");
 
   function handleSubmit(evento) {
@@ -24,13 +32,17 @@ export default function CadastroLote() {
           alimento,
           quantidade_kg: quantidadeKg,
           condicao_informada: condicaoInformada,
+          triagem,
         },
         usuario,
       );
 
       navigate("/doador/meus-lotes", {
         state: {
-          mensagem: `Lote ${lote.lote_id} cadastrado neste navegador.`,
+          mensagem:
+            lote.destino === "compostagem"
+              ? `Lote ${lote.lote_id} cadastrado com destino compostagem; ele não aparece para beneficiários.`
+              : `Lote ${lote.lote_id} cadastrado neste navegador.`,
         },
       });
     } catch (erroCadastro) {
@@ -48,6 +60,40 @@ export default function CadastroLote() {
         Cadastro local de demonstração. Use somente dados fictícios.
         Todos os campos são obrigatórios.
       </p>
+
+      {triagem ? (
+        <aside className="aviso-local" aria-label="Triagem visual anexada">
+          <h2>Triagem visual anexada</h2>
+          <p>
+            {triagem.classe} (confiança {Math.round(triagem.confianca * 100)}%),
+            produto {triagem.produto || "não identificado"}. O texto sugerido
+            foi colocado em "Condição informada pelo doador"; você pode editar.
+          </p>
+          {destinoCompostagem && (
+            <p>
+              <strong>
+                Destino: compostagem. Este lote não aparecerá para os
+                beneficiários.
+              </strong>
+            </p>
+          )}
+          {triagem.pede_confirmacao_humana && !destinoCompostagem && (
+            <p>
+              <strong>
+                O modelo pediu avaliação pessoal: confira o alimento antes de
+                salvar.
+              </strong>
+            </p>
+          )}
+          <p>{AVISO_TRIAGEM}</p>
+        </aside>
+      ) : (
+        <p>
+          <Link to="/doador/triagem">
+            Fazer a triagem inteligente por foto antes de cadastrar
+          </Link>
+        </p>
+      )}
 
       <form
         className="formulario-lote"

@@ -98,7 +98,7 @@ export function AuthProvider({ children }) {
       throw new Error("A senha deve ter pelo menos 8 caracteres.");
     }
 
-    if (!["doador", "beneficiario"].includes(perfil)) {
+    if (!["doador", "beneficiario", "operador"].includes(perfil)) {
       throw new Error("Selecione um perfil válido.");
     }
 

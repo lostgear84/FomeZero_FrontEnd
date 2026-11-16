@@ -3,6 +3,10 @@ import { createContext, useContext } from "react";
 export const AuthContext = createContext(null);
 
 export function destinoDoPerfil(perfil) {
+  if (perfil === "operador") {
+    return "/operador";
+  }
+
   return perfil === "beneficiario" ? "/beneficiario" : "/doador";
 }
 

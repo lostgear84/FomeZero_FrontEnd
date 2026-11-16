@@ -82,6 +82,7 @@ export default function Cadastro() {
         >
           <option value="doador">Doador</option>
           <option value="beneficiario">Beneficiário</option>
+          <option value="operador">Operador FOMEZERO (revisão humana)</option>
         </select>
 
         {erro && <p className="mensagem-erro" role="alert">{erro}</p>}

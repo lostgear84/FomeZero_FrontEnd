@@ -1,3 +1,5 @@
+import { CLASSE_DETERIORACAO } from "./triagemService";
+
 const STORAGE_KEY = "fomezero.lotes.v1";
 
 export function listarLotes() {
@@ -26,6 +28,11 @@ export function listarLotes() {
   return lotes;
 }
 
+// Lotes que podem aparecer para beneficiários (destino compostagem fica de fora).
+export function listarLotesParaDoacao() {
+  return listarLotes().filter((lote) => lote.destino !== "compostagem");
+}
+
 export function listarLotesDoDoador(doadorId) {
   return listarLotes().filter((lote) => lote.doador.id === doadorId);
 }
@@ -44,6 +51,15 @@ export function cadastrarLote(dados, usuario) {
     throw new Error("Preencha todos os campos do lote.");
   }
 
+  // O identificador vira nome do Termo de Doação na AIPA: sem caracteres proibidos em nomes de arquivo.
+  const temControle = [...loteId].some((letra) => letra.charCodeAt(0) < 32);
+
+  if (loteId.length > 80 || temControle || /[/\\:*?"<>|]/.test(loteId) || loteId.endsWith(".")) {
+    throw new Error(
+      'Use um identificador de até 80 caracteres, sem / \\ : * ? " < > | e sem ponto no fim.',
+    );
+  }
+
   if (!Number.isFinite(quantidadeKg) || quantidadeKg <= 0) {
     throw new Error("Informe uma quantidade em kg maior que zero.");
   }
@@ -60,6 +76,18 @@ export function cadastrarLote(dados, usuario) {
     );
   }
 
+  const triagem = dados.triagem || null;
+
+  if (triagem && triagem.doador_id !== usuario.id) {
+    throw new Error("A triagem anexada não pertence a esta conta.");
+  }
+
+  // Triagem com sinais visuais de deterioração: o lote não segue para doação de consumo.
+  const destino =
+    triagem && !triagem.inconclusivo && triagem.classe === CLASSE_DETERIORACAO
+      ? "compostagem"
+      : "doacao";
+
   const lote = {
     lote_id: loteId,
     doador: {
@@ -69,6 +97,8 @@ export function cadastrarLote(dados, usuario) {
     alimento,
     quantidade_kg: quantidadeKg,
     condicao_informada: condicaoInformada,
+    destino,
+    triagem,
   };
 
   try {

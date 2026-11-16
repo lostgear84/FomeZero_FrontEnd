@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { listarLotes } from "../services/lotesService";
+import { listarLotesParaDoacao } from "../services/lotesService";
 
 function carregarLotes() {
   try {
     return {
-      lotes: listarLotes(),
+      lotes: listarLotesParaDoacao(),
       erro: "",
     };
   } catch (erroLeitura) {
@@ -77,6 +77,7 @@ export default function LotesDisponiveis() {
         <p>
           Não há reserva ou confirmação de entrega nesta tela. A condição é
           declarada pelo doador e não representa validação sanitária.
+          Lotes que a triagem visual destinou à compostagem não aparecem aqui.
         </p>
       </aside>
 

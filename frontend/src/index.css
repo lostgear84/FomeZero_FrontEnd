@@ -669,3 +669,97 @@ fieldset.formulario-lote {
   border: 1px solid var(--borda);
   border-radius: 0.75rem;
 }
+
+/* Triagem inteligente (VCIA) */
+.previa-triagem {
+  max-width: min(100%, 18rem);
+  border: 1px solid var(--borda);
+  border-radius: 0.6rem;
+}
+
+.resultado-triagem dl {
+  margin-bottom: 1rem;
+}
+
+.opcao-marcavel {
+  display: block;
+  font-weight: normal;
+  margin: 0.25rem 0;
+}
+
+.caso-revisao dt {
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.caso-revisao dd {
+  margin: 0;
+}
+
+.decisao-revisao {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 28rem;
+  margin-top: 1rem;
+}
+
+.botoes-decisao {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.botao-secundario {
+  background: var(--superficie);
+  color: var(--petroleo);
+}
+
+.botao-secundario:hover {
+  background: #e9f1f2;
+}
+
+.status-servicos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.78rem;
+}
+
+.status-servico {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.status-texto {
+  font-weight: normal;
+}
+
+.status-ponto {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #9aa5ab;
+}
+
+.status-no_ar .status-ponto {
+  background: #4ade80;
+}
+
+.status-fora .status-ponto {
+  background: #f87171;
+}
+
+@media (max-width: 640px) {
+  .status-servicos {
+    order: 4;
+    width: 100%;
+  }
+}
