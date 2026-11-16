@@ -110,8 +110,9 @@ export function limparResultadosAipa() {
   localStorage.removeItem(STORAGE_KEY);
 }
 
-// Resumo do doador a partir dos lotes do CT-04. Usa o acumulado que a AIPA
-// calculou no lote processado mais recente; sem lote processado, fica null.
+// Resumo do doador a partir dos lotes do CT-04.
+// Prioridade: soma dos lotes processados individualmente.
+// Fallback: campos acumulados enviados pela AIPA no lote processado mais recente.
 export function resumoDoDoador(resultados, doadorId) {
   if (!resultados) {
     return null;
@@ -122,20 +123,45 @@ export function resumoDoDoador(resultados, doadorId) {
     .filter((lote) => lote.status === "processado")
     .sort((a, b) => String(a.processado_em).localeCompare(String(b.processado_em)));
   const ultimo = processados[processados.length - 1] || null;
-  const co2 = processados.reduce(
+
+  const somaKg = processados.reduce(
+    (soma, lote) => soma + (Number(lote.quantidade_recebida_kg) || 0),
+    0,
+  );
+
+  const somaPontos = processados.reduce(
+    (soma, lote) => soma + (Number(lote.pontos) || 0),
+    0,
+  );
+
+  const somaCo2 = processados.reduce(
     (soma, lote) => soma + (Number(lote.co2_evitado_kg_co2eq) || 0),
     0,
   );
+
+  const kgAcumulado =
+    processados.length && somaKg > 0
+      ? Math.round(somaKg * 100) / 100
+      : ultimo
+        ? ultimo.kg_acumulado_doador
+        : null;
+
+  const pontosAcumulados =
+    processados.length && somaPontos > 0
+      ? Math.round(somaPontos)
+      : ultimo
+        ? ultimo.pontos_acumulados_doador
+        : null;
 
   return {
     lotes,
     processados: processados.length,
     emRevisao: lotes.filter((lote) => lote.status === "revisao_humana").length,
     comFalha: lotes.filter((lote) => lote.status === "falha").length,
-    kgAcumulado: ultimo ? ultimo.kg_acumulado_doador : null,
-    pontosAcumulados: ultimo ? ultimo.pontos_acumulados_doador : null,
+    kgAcumulado,
+    pontosAcumulados,
     selo: ultimo ? ultimo.selo_verde_esg : null,
-    co2Estimado: processados.length ? Math.round(co2 * 100) / 100 : null,
+    co2Estimado: processados.length ? Math.round(somaCo2 * 100) / 100 : null,
     metodologia: ultimo ? ultimo.metodologia_carbono : null,
   };
 }
