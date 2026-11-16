@@ -45,11 +45,40 @@ export function validarArquivoCt04(texto) {
     throw new Error("O arquivo não traz a lista de lotes.");
   }
 
-  const lotes = dados.lotes.filter(
-    (lote) => lote && typeof lote.lote_id === "string" && lote.status,
-  );
+  const statusValidos = ["processado", "revisao_humana", "falha"];
+  const idsVistos = new Set();
 
-  return { ...dados, lotes };
+  for (const lote of dados.lotes) {
+    if (!lote || typeof lote !== "object") {
+      throw new Error("O arquivo contém um lote inválido.");
+    }
+
+    if (typeof lote.lote_id !== "string" || !lote.lote_id.trim()) {
+      throw new Error("Todo lote precisa informar o token lote_id.");
+    }
+
+    if (idsVistos.has(lote.lote_id)) {
+      throw new Error(
+        `O lote ${lote.lote_id} aparece mais de uma vez no arquivo.`,
+      );
+    }
+
+    idsVistos.add(lote.lote_id);
+
+    if (typeof lote.doador_id !== "string" || !lote.doador_id.trim()) {
+      throw new Error(
+        `O lote ${lote.lote_id} precisa informar o doador_id.`,
+      );
+    }
+
+    if (!statusValidos.includes(lote.status)) {
+      throw new Error(
+        `O lote ${lote.lote_id} possui um status inválido: ${lote.status}.`,
+      );
+    }
+  }
+
+  return { ...dados, lotes: dados.lotes };
 }
 
 export async function importarArquivoCt04(arquivo) {
