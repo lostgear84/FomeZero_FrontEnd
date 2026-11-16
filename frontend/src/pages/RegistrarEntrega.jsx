@@ -8,6 +8,7 @@ import {
   listarEntregas,
   registrarEntrega,
 } from "../services/entregasService";
+import { processarEntregaAutomatica } from "../services/aipaService";
 
 function lerDados() {
   try {
@@ -44,10 +45,24 @@ export default function RegistrarEntrega() {
         { lote_id: loteId, confirmacao },
         usuario,
       );
+
+      const lote = dados.lotes.find((item) => item.lote_id === entrega.lote_id);
+      const resultado = processarEntregaAutomatica(entrega, lote);
+      const loteResultado = resultado.lotes[0];
+
       setDados(lerDados());
       setLoteId("");
       setConfirmacao("");
-      setMensagem(`Entrega do lote ${entrega.lote_id} registrada neste navegador.`);
+
+      if (loteResultado.status === "processado") {
+        setMensagem(
+          `Entrega do lote ${entrega.lote_id} registrada. Validação automática local: ${loteResultado.pontos} pontos para o Doador.`,
+        );
+      } else {
+        setMensagem(
+          `Entrega do lote ${entrega.lote_id} registrada. A validação automática local encaminhou o caso para revisão humana.`,
+        );
+      }
     } catch (falha) {
       setErro(falha.message || "Não foi possível registrar a entrega.");
     }
@@ -77,10 +92,10 @@ export default function RegistrarEntrega() {
       <h1 id="titulo-registrar-entrega">Registrar entrega de lote</h1>
 
       <p id="aviso-entrega">
-        Confirme com suas palavras o que chegou. O texto é lido pela IA do robô
-        da AIPA, que extrai os kg recebidos e identifica ocorrências (avaria,
-        falta, temperatura). Use somente dados fictícios e não escreva nomes,
-        telefones ou documentos.
+        Confirme com suas palavras o que chegou. A validação automática local
+        identifica os kg informados e gera uma recompensa de demonstração para
+        o Doador. Use somente dados fictícios e não escreva nomes, telefones
+        ou documentos.
       </p>
 
       <form
@@ -116,7 +131,7 @@ export default function RegistrarEntrega() {
           required
         />
         <small id="ajuda-confirmacao">
-          Diga quantos kg chegaram e se houve problema. Esta confirmação não
+          Informe quantos kg chegaram e se houve problema. Esta confirmação não
           atesta que o alimento é seguro para consumo.
         </small>
 
@@ -140,10 +155,11 @@ export default function RegistrarEntrega() {
       >
         <h2 id="titulo-exportar-aipa">Enviar entregas para a AIPA</h2>
         <p>
-          O robô da AIPA roda fora do navegador. Exporte o arquivo e coloque-o
-          em <code>AIPA/entrada/lotes_entregues.json</code>; depois execute{" "}
-          <code>python executar_robo.py</code>. Os resultados voltam pelo
-          Painel de Recompensas do Doador.
+          A validação automática local gera uma recompensa imediata de
+          demonstração. Para a validação externa oficial, exporte o arquivo e
+          coloque-o em <code>AIPA/entrada/lotes_entregues.json</code>; depois
+          execute <code>python executar_robo.py</code>. O resultado importado
+          substitui a simulação local.
         </p>
         <button type="button" onClick={exportar}>
           Exportar entregas para a AIPA (JSON)

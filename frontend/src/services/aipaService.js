@@ -1,10 +1,13 @@
 // Leitura dos resultados do robô da AIPA (contrato CT-04, arquivo saida/ct04/ct04_lotes.json).
-// Os resultados ficam no navegador; nada é calculado aqui: pontos, Selo Verde ESG e
-// CO₂ evitado vêm prontos da AIPA.
+// Os resultados ficam no navegador. O frontend também realiza uma validação
+// automática local para demonstrar a recompensa imediata ao Doador.
+// A execução do robô da AIPA continua sendo a validação externa oficial.
 
 const STORAGE_KEY = "fomezero.aipa.ct04.v1";
 const VERSOES_ACEITAS = ["ct04-v0"];
 const LIMITE_ARQUIVO = 2 * 1024 * 1024;
+const PONTOS_POR_KG = 10;
+const FATOR_CO2_POR_KG = 0.2;
 
 export const FAIXAS_SELO = [
   { selo: "Bronze", kg: 50 },
@@ -79,6 +82,81 @@ export function validarArquivoCt04(texto) {
   }
 
   return { ...dados, lotes: dados.lotes };
+}
+
+function salvarResultadoValidado(resultado) {
+  const validado = validarArquivoCt04(JSON.stringify(resultado));
+
+  const registro = {
+    importado_em: new Date().toISOString(),
+    arquivo: "validacao-automatica-local.json",
+    ...validado,
+  };
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(registro));
+  } catch {
+    throw new Error("Não foi possível salvar o resultado no navegador.");
+  }
+
+  return registro;
+}
+
+// Validação automática local, usada para demonstrar a recompensa imediata.
+// Não substitui a execução do robô da AIPA nem atesta segurança para consumo.
+export function processarEntregaAutomatica(entrega, lote) {
+  const texto = entrega.confirmacao_entrega_texto || "";
+  const correspondencia = texto.match(/(\d+(?:[.,]\d+)?)\s*kg/i);
+  const kgInformado = correspondencia ? Number(correspondencia[1].replace(",", ".")) : null;
+  const kgCadastrado = Number(lote.quantidade_kg);
+
+  const agora = new Date().toISOString();
+  const base = {
+    lote_id: lote.lote_id,
+    doador_id: lote.doador.id,
+    processado_em: agora,
+    termo_doacao_id: `TERMO-${lote.lote_id}`,
+    motivo: [],
+  };
+
+  let loteResultado;
+
+  if (kgInformado === null) {
+    loteResultado = {
+      ...base,
+      status: "revisao_humana",
+      quantidade_recebida_kg: null,
+      pontos: 0,
+      co2_evitado_kg_co2eq: 0,
+      motivo: ["sem_confirmacao"],
+    };
+  } else if (kgInformado > kgCadastrado) {
+    loteResultado = {
+      ...base,
+      status: "revisao_humana",
+      quantidade_recebida_kg: kgInformado,
+      pontos: 0,
+      co2_evitado_kg_co2eq: 0,
+      motivo: ["divergencia_kg"],
+    };
+  } else {
+    loteResultado = {
+      ...base,
+      status: "processado",
+      quantidade_recebida_kg: kgInformado,
+      pontos: Math.round(kgInformado * PONTOS_POR_KG),
+      co2_evitado_kg_co2eq: Math.round(kgInformado * FATOR_CO2_POR_KG * 100) / 100,
+      motivo: [],
+    };
+  }
+
+  const resultado = {
+    versao_contrato: "ct04-v0",
+    gerado_em: agora,
+    lotes: [loteResultado],
+  };
+
+  return salvarResultadoValidado(resultado);
 }
 
 export async function importarArquivoCt04(arquivo) {

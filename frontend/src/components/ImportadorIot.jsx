@@ -57,7 +57,7 @@ export default function ImportadorIot({ lotes }) {
 
     try {
       const resultado = interpretarLogIot(await selecionado.text(), lotes);
-      const lotesAtualizados = salvarRegistrosIot(resultado.registros);
+      salvarRegistrosIot(resultado.registros);
 
       setDados(resultado);
       setArquivo(selecionado.name);
