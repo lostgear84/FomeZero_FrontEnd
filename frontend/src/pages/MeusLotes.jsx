@@ -39,6 +39,25 @@ function CartaoLote({ lote }) {
 
         <dt>Condição informada pelo doador</dt>
         <dd className="texto-preservado">{lote.condicao_informada}</dd>
+
+        <dt>Destino</dt>
+        <dd>
+          {lote.destino === "compostagem"
+            ? "Compostagem (não aparece para beneficiários)"
+            : "Doação"}
+        </dd>
+
+        {lote.triagem && (
+          <>
+            <dt>Triagem visual</dt>
+            <dd>
+              {lote.triagem.classe} (confiança{" "}
+              {Math.round(lote.triagem.confianca * 100)}%), produto{" "}
+              {lote.triagem.produto || "não identificado"}. Sugestão do modelo,
+              não laudo.
+            </dd>
+          </>
+        )}
       </dl>
     </li>
   );

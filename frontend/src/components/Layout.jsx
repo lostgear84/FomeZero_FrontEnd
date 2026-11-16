@@ -1,10 +1,13 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { destinoDoPerfil, useAuth } from "../context/auth";
+import StatusServicos from "./StatusServicos";
 
 export default function Layout() {
   const { usuario, sair } = useAuth();
   const navigate = useNavigate();
   const doador = usuario?.perfil === "doador";
+  const operador = usuario?.perfil === "operador";
+  const rotuloPerfil = doador ? "Doador" : operador ? "Operador" : "Beneficiário";
 
   function handleSair() {
     sair();
@@ -22,12 +25,16 @@ export default function Layout() {
 
         <nav aria-label="Navegação principal">
           <ul className="menu">
-            {doador ? (
+            {doador && (
               <>
                 <li><NavLink to="/doador" end>Doador</NavLink></li>
                 <li><NavLink to="/recompensas">Recompensas</NavLink></li>
               </>
-            ) : (
+            )}
+            {operador && (
+              <li><NavLink to="/operador">Revisão humana</NavLink></li>
+            )}
+            {!doador && !operador && (
               <li>
                 <NavLink to="/beneficiario">Beneficiário</NavLink>
               </li>
@@ -35,9 +42,11 @@ export default function Layout() {
           </ul>
         </nav>
 
+        <StatusServicos />
+
         <div className="usuario">
           <span>
-            {usuario.nome} — {doador ? "Doador" : "Beneficiário"}
+            {usuario.nome} — {rotuloPerfil}
           </span>
           <button type="button" onClick={handleSair}>Sair</button>
         </div>

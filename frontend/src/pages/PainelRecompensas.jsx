@@ -2,35 +2,17 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth";
 import {
+  atualizarDaAipa,
   importarArquivoCt04,
   lerResultadosAipa,
   limparResultadosAipa,
+  motivoLegivel,
   proximoSelo,
   resumoDoDoador,
+  rotuloSituacao,
+  urlTermo,
 } from "../services/aipaService";
 
-const ROTULO_STATUS = {
-  processado: "Processado pela AIPA",
-  revisao_humana: "Em revisão humana",
-  falha: "Falha no processamento",
-};
-
-// Motivos do CT-04 em linguagem simples. Código desconhecido aparece como veio.
-const ROTULO_MOTIVO = {
-  ocorrencia_avaria: "possível avaria informada na confirmação",
-  ocorrencia_divergencia_quantidade: "possível diferença entre o cadastrado e o recebido",
-  ocorrencia_problema_temperatura: "possível problema de temperatura informado",
-  ocorrencia_ilegivel_outro: "confirmação pouco clara",
-  baixa_confianca: "a IA não teve confiança suficiente para seguir sozinha",
-  divergencia_kg: "kg recebidos diferentes do cadastrado",
-  alerta_iot_quebra_cadeia_frio: "alerta de quebra da cadeia de frio no transporte (IoT)",
-  sem_confirmacao: "sem texto de confirmação da entrega",
-};
-
-function motivoLegivel(codigo) {
-  const base = String(codigo).split(":")[0];
-  return ROTULO_MOTIVO[codigo] || ROTULO_MOTIVO[base] || codigo;
-}
 
 function frase(texto) {
   const limpo = String(texto || "").trim();
@@ -107,6 +89,21 @@ export default function PainelRecompensas() {
     }
   }
 
+  async function atualizar() {
+    setErro("");
+    setProcessando(true);
+
+    try {
+      setResultados(await atualizarDaAipa());
+    } catch (falha) {
+      setErro(
+        `${falha.message || "Não foi possível consultar a AIPA."} Os resultados anteriores, se houver, foram mantidos.`,
+      );
+    } finally {
+      setProcessando(false);
+    }
+  }
+
   function limpar() {
     limparResultadosAipa();
     setResultados(null);
@@ -128,34 +125,42 @@ export default function PainelRecompensas() {
       >
         <h2 id="titulo-importar-aipa">Resultados do robô da AIPA</h2>
         <p>
-          Depois de executar o robô, importe o arquivo{" "}
-          <code>saida/ct04/ct04_lotes.json</code>. Pontos, Selo Verde ESG e
-          CO₂ evitado são calculados pela AIPA; este painel só exibe.
+          Quando o beneficiário confirma a entrega, o robô da AIPA processa o
+          lote na hora e este painel se atualiza. Pontos, Selo Verde ESG e CO₂
+          evitado são calculados pela AIPA; este painel só exibe.
         </p>
-        <form className="formulario-lote" onSubmit={importar}>
-          <label htmlFor="arquivo-ct04">Arquivo de resultados (JSON)</label>
-          <input
-            id="arquivo-ct04"
-            name="arquivoCt04"
-            type="file"
-            accept="application/json,.json"
-            required
-          />
-          {erro && (
-            <p className="mensagem-erro" role="alert">
-              {erro}
-            </p>
-          )}
-          <button type="submit" disabled={processando}>
-            {processando ? "Importando..." : "Importar resultados da AIPA"}
-          </button>
-        </form>
+        {erro && (
+          <p className="mensagem-erro" role="alert">
+            {erro}
+          </p>
+        )}
+        <button type="button" onClick={atualizar} disabled={processando}>
+          {processando ? "Consultando..." : "Atualizar resultados da AIPA"}
+        </button>
+        <details>
+          <summary>Sem o serviço: importar arquivo do robô</summary>
+          <form className="formulario-lote" onSubmit={importar}>
+            <label htmlFor="arquivo-ct04">
+              Arquivo saida/ct04/ct04_lotes.json (JSON)
+            </label>
+            <input
+              id="arquivo-ct04"
+              name="arquivoCt04"
+              type="file"
+              accept="application/json,.json"
+              required
+            />
+            <button type="submit" disabled={processando}>
+              {processando ? "Importando..." : "Importar resultados da AIPA"}
+            </button>
+          </form>
+        </details>
         {resultados && (
           <p role="status">
-            Importado de {resultados.arquivo} em{" "}
+            Resultados do {resultados.arquivo} em{" "}
             {new Date(resultados.importado_em).toLocaleString("pt-BR")}.{" "}
             <button type="button" onClick={limpar}>
-              Remover resultados importados
+              Remover resultados deste navegador
             </button>
           </p>
         )}
@@ -167,8 +172,8 @@ export default function PainelRecompensas() {
           <p>
             Nenhum ponto, selo ou valor de CO₂ evitado foi atribuído a esta
             conta. O cadastro de um lote não comprova entrega nem gera
-            recompensas: é preciso registrar a entrega, exportar para a AIPA,
-            executar o robô e importar o resultado.
+            recompensas: elas só aparecem depois que o beneficiário confirma a
+            entrega e o robô da AIPA valida o lote.
           </p>
         </aside>
       )}
@@ -229,7 +234,7 @@ export default function PainelRecompensas() {
               <li key={lote.lote_id} className="cartao-lote">
                 <h3>{lote.lote_id}</h3>
                 <p>
-                  <strong>{ROTULO_STATUS[lote.status] || lote.status}</strong>
+                  <strong>{rotuloSituacao(lote)}</strong>
                 </p>
                 {lote.status === "processado" ? (
                   <ul>
@@ -241,7 +246,23 @@ export default function PainelRecompensas() {
                       CO₂ evitado: {numero(lote.co2_evitado_kg_co2eq)} kg CO₂eq
                       (estimativa)
                     </li>
-                    <li>Termo de Doação: {lote.termo_doacao_id}</li>
+                    <li>
+                      Termo de Doação: {lote.termo_doacao_id}
+                      {resultados?.servico_url && (
+                        <>
+                          {" "}
+                          (
+                          <a
+                            href={urlTermo(lote.lote_id, resultados.servico_url)}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            abrir PDF
+                          </a>
+                          )
+                        </>
+                      )}
+                    </li>
                   </ul>
                 ) : (
                   <p>
@@ -250,6 +271,7 @@ export default function PainelRecompensas() {
                       <>Motivo: {lote.motivo.map(motivoLegivel).join("; ")}.</>
                     )}{" "}
                     {lote.status === "revisao_humana" &&
+                      lote.revisao?.situacao !== "reprovado" &&
                       "Uma pessoa da equipe FOMEZERO decide este caso."}
                   </p>
                 )}

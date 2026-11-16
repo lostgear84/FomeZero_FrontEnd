@@ -43,9 +43,12 @@ A autenticação é local e demonstrativa. Ela permite validar o fluxo de acesso
 - Solicitação do cidadão processada por regras locais simuladas.
 - Exibição de resposta e ação sugerida após o processamento.
 - Geração explícita de lotes fictícios com identificadores `DEMO-`.
-- Registro da entrega do lote pelo Beneficiário, com texto de confirmação, e exportação para o robô da AIPA (JSON).
-- Painel de Recompensas do Doador com os resultados da AIPA importados: pontos, Selo Verde ESG, progresso até o próximo selo, CO₂ evitado (estimativa, com metodologia) e lotes em revisão humana.
+- Registro da entrega do lote pelo Beneficiário (kg recebidos, problemas marcados e texto de confirmação), processado na hora pelo robô da AIPA (serviço local), com exportação em JSON como alternativa.
+- Perfil **Operador FOMEZERO** com a tela de revisão humana (`/operador`): fila dos lotes que a AIPA não validou sozinha, com motivos, kg cadastrado × informado × lido no texto, triagem por foto e IoT; aprovar (com os kg aprovados) gera as recompensas, reprovar encerra sem pontos. O operador é registrado por código, nunca pelo nome.
+- Indicador no cabeçalho com a situação dos módulos de IA (AIPA, VCIA e GENAI: no ar, fora do ar ou simulado), atualizado a cada 30 s.
+- Painel de Recompensas do Doador com os resultados da AIPA (atualizados automaticamente ou importados): pontos, Selo Verde ESG, progresso até o próximo selo, CO₂ evitado (estimativa, com metodologia), Termo de Doação em PDF e lotes em revisão humana.
 - Assistente de consulta para doadores (GENAI), com respostas citando documentos oficiais, em modo simulado ou integrado.
+- Triagem inteligente por foto (VCIA), com o modelo real de visão computacional, ligada ao cadastro do lote; itens com sinais visuais de deterioração seguem para compostagem.
 
 ## Arquitetura do frontend
 
@@ -72,13 +75,15 @@ frontend/src/
 │   ├── MeusLotes.jsx
 │   ├── PainelRecompensas.jsx
 │   ├── RegistrarEntrega.jsx
+│   ├── TriagemInteligente.jsx
 │   └── SolicitacaoCidadao.jsx
 ├── services/
 │   ├── aipaService.js
 │   ├── assistenteService.js
 │   ├── entregasService.js
 │   ├── lotesService.js
-│   └── solicitacaoService.js
+│   ├── solicitacaoService.js
+│   └── triagemService.js
 ├── App.jsx
 └── main.jsx
 ```
@@ -108,16 +113,18 @@ frontend/src/
 | Rota | Acesso | Funcionalidade |
 |---|---|---|
 | `/login` | Público | Login local |
-| `/cadastro` | Público | Cadastro de Doador ou Beneficiário |
+| `/cadastro` | Público | Cadastro de Doador, Beneficiário ou Operador FOMEZERO |
 | `/` | Protegida | Redireciona para a área correspondente ao perfil |
 | `/doador` | Protegida | Área inicial do Doador |
 | `/doador/cadastro-lote` | Protegida | Cadastro de lote de doação |
 | `/doador/meus-lotes` | Protegida | Consulta dos lotes do Doador |
 | `/doador/assistente` | Protegida | Assistente de consulta (GENAI) |
+| `/doador/triagem` | Protegida | Triagem inteligente por foto (VCIA) |
 | `/beneficiario` | Protegida | Área inicial do Beneficiário |
 | `/beneficiario/lotes-disponiveis` | Protegida | Consulta de lotes disponíveis |
 | `/beneficiario/solicitacao` | Protegida | Solicitação do cidadão |
-| `/beneficiario/registrar-entrega` | Protegida | Registro da entrega e exportação para a AIPA |
+| `/operador` | Protegida (Operador) | Fila de revisão humana da AIPA: aprovar ou reprovar |
+| `/beneficiario/registrar-entrega` | Protegida | Registro da entrega, processamento na AIPA e situação de cada entrega |
 | `/recompensas` | Protegida | Painel de Recompensas do Doador |
 | `*` | Público | Renderiza a tela de login para caminhos não reconhecidos |
 
@@ -148,7 +155,7 @@ O cálculo de CO₂ não é feito pelo frontend. O valor exibido vem do robô da
 Além das regras locais, há dois processamentos com IA de outros módulos do FOMEZERO:
 
 - **Assistente de consulta (GENAI):** RAG sobre o corpus de documentos oficiais da PLN (Lei 15.224/2025, RDC ANVISA 216/2004 e guias da ANVISA). Modo simulado (padrão): as 10 respostas reais gravadas pela GENAI em `src/data/genai_respostas_SIMULADO.json`. Modo integrado: o usuário informa o link do Gradio do notebook da GENAI e o frontend chama o endpoint `/consultar` com `@gradio/client`; se a conexão falhar, a tela avisa e volta ao modo simulado.
-- **Robô pós-entrega (AIPA):** a IA da AIPA lê a confirmação escrita pelo beneficiário, extrai os kg recebidos e identifica ocorrências; casos duvidosos vão para revisão humana. O frontend exporta as entregas e importa o resultado.
+- **Robô pós-entrega (AIPA):** a IA da AIPA lê a confirmação escrita pelo beneficiário, extrai os kg recebidos e identifica ocorrências; casos duvidosos vão para revisão humana. Ao confirmar a entrega, o frontend envia o lote ao serviço local da AIPA e mostra o resultado; sem o serviço, exporta e importa por arquivo.
 
 ## Acessibilidade
 
@@ -186,21 +193,35 @@ Esses testes são uma revisão manual inicial. Não representam uma certificaç�
 
 | Integração | Status | Pendência |
 |---|---|---|
-| AIPA | Integrada por arquivos (simulação) | Exportação `lotes_entregues.json` → robô da AIPA → importação `saida/ct04/ct04_lotes.json` no Painel de Recompensas. Regras de pontos e selo de demonstração, pendentes de aprovação do grupo |
+| AIPA | Integrada (serviço local) | Confirmação da entrega → `POST /api/lotes` do `servico_aipa.py` (`http://127.0.0.1:5070`) → robô completo → CT-04 no Painel. Sem o serviço: arquivos `lotes_entregues.json` / `ct04_lotes.json`. Regras de pontos e selo de demonstração, pendentes de aprovação do grupo |
 | GENAI | Integrada (simulado e integrado) | Modo integrado depende do notebook da GENAI no Colab (link temporário) |
 | IoT | Parcial — importação histórica implementada | Conexão ao vivo não implementada |
-| VCIA | Pendente | Decisão da equipe sobre onde será hospedada a funcionalidade de imagem |
+| VCIA | Integrada (modelo real, app local) | Triagem inteligente em `/doador/triagem`; depende do app da VCIA rodando em `http://127.0.0.1:7860` (ou link `gradio.live`) |
 
 O Painel de Recompensas só exibe pontos, selo e CO₂ evitado que vieram do robô da AIPA, com a regra e a fonte. Sem resultado importado, mostra "Sem pontos lançados" e "Não calculado" (nunca zero).
 
 Fluxo para demonstrar a AIPA:
 
-1. Doador cadastra lotes (ou gera os lotes `DEMO-`).
-2. Beneficiário registra a entrega em `/beneficiario/registrar-entrega` e clica em "Exportar entregas para a AIPA (JSON)".
-3. O arquivo baixado vai para `AIPA/entrada/lotes_entregues.json` no repositório da AIPA (https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_AIPA) e o robô roda com `python executar_robo.py`.
-4. Doador importa `saida/ct04/ct04_lotes.json` no Painel de Recompensas.
+1. No repositório da AIPA (https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_AIPA), suba o serviço local: `python servico_aipa.py` (porta 5070).
+2. Doador cadastra lotes (opcionalmente pela triagem por foto, ou gera os lotes `DEMO-`).
+3. Beneficiário registra a entrega em `/beneficiario/registrar-entrega`: kg recebidos, problemas marcados e texto. O robô roda na hora (cerca de 8 s) e a tela mostra se a entrega foi validada ou foi para revisão humana, e por quê.
+4. Doador abre o Painel de Recompensas: pontos, Selo Verde ESG, CO₂ evitado e o Termo de Doação em PDF já aparecem ("Atualizar resultados da AIPA" relê o serviço).
+
+Regras da AIPA que mandam para revisão humana (sem pontos): ocorrência ou baixa confiança na leitura do texto; kg que não bate (cadastrado × informado × escrito no texto, tolerância de 5% ou 0,5 kg); alerta de quebra da cadeia de frio da IoT; triagem por foto do cadastro inconclusiva, que pediu avaliação pessoal ou viu deterioração; qualquer problema marcado pelo beneficiário.
+
+Sem o serviço: "Exportar entregas para a AIPA (JSON)" → `AIPA/entrada/lotes_entregues.json` → `python executar_robo.py` → importar `saida/ct04/ct04_lotes.json` no Painel.
 
 Assistente da GENAI: https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_GENAI
+
+## Demonstração em um clique
+
+Com os repositórios da AIPA e da VCIA clonados ao lado deste (mesma pasta-mãe), rode no PowerShell, na raiz deste repositório:
+
+```powershell
+.\iniciar_demo.ps1
+```
+
+O script abre uma janela para cada serviço (AIPA em 5070, VCIA em 7860, portal em 5173), reaproveita o que já estiver no ar e abre o navegador. Pastas em outro lugar: `-PastaAipa`, `-PastaVcia`, `-PythonAipa`, `-PythonVcia`; sem a triagem: `-SemVcia`. Se o Windows bloquear o script, rode antes `Set-ExecutionPolicy -Scope Process Bypass` (vale só para aquela janela). A GENAI roda no Colab: cole o link `gradio.live` na tela do assistente ou use o modo simulado.
 
 ## Execução
 
@@ -235,6 +256,29 @@ A sequência principal da demonstração inclui:
 5. [Resposta simulada e ação sugerida](docs/evidencias/10-resposta-simulada.png).
 
 As capturas complementam o relato dos testes e a demonstração ao vivo; não comprovam integrações que permanecem pendentes.
+
+## Triagem inteligente por foto (VCIA)
+
+O doador acessa **Triagem inteligente por foto** (`/doador/triagem`), envia a foto de um item de hortifrúti e o
+frontend chama o modelo real de visão computacional do FOMEZERO (EfficientNet-B0, repositório
+https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_VISAO_COMPUTACIONAL) pelo endpoint `/triagem` do app
+Gradio, com `@gradio/client`. O resultado mostra a condição visual sugerida, a confiança, o produto reconhecido, o
+aviso de nitidez e o aviso de que a triagem não é laudo.
+
+- **Uso no cadastro:** "Usar no cadastro do lote" leva ao formulário com o texto sugerido em "Condição informada pelo
+  doador" (editável) e anexa o resumo da triagem ao lote (classe, confiança, produto, modelo, data). A foto **não** é
+  guardada.
+- **Sinais visuais de deterioração:** o lote é registrado com destino **compostagem** e não aparece em "Lotes
+  disponíveis" nem em "Registrar entrega".
+- **Inconclusivo ou foto borrada:** a tela pede outra foto; se o doador seguir, o cadastro avisa que precisa de
+  avaliação pessoal.
+- **Validação da imagem:** só JPEG ou PNG (conferido pela assinatura do arquivo), até 5 MB.
+- **Serviço fora do ar:** mensagem explicando que o app da VCIA precisa estar rodando.
+- **Limite:** a triagem é opcional; ela apoia o doador e não substitui a avaliação pessoal nem a vigilância sanitária.
+
+Para subir o modelo (no repositório da VCIA, ambiente com `torch`, `torchvision`, `gradio`, `opencv-python-headless`,
+`scikit-learn`, `matplotlib`): `python app/app.py` (abre em `http://127.0.0.1:7860`). O endereço pode ser trocado na
+própria tela ou pela variável `VITE_VCIA_URL`.
 
 ## Importação histórica de registros IoT
 

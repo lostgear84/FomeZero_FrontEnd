@@ -17,6 +17,9 @@ export default function DoadorHome() {
       <nav aria-label="Ações do doador">
         <ul className="acoes-doador">
           <li>
+            <Link to="/doador/triagem">Triagem inteligente por foto</Link>
+          </li>
+          <li>
             <Link to="/doador/cadastro-lote">Cadastrar lote de doação</Link>
           </li>
           <li>
