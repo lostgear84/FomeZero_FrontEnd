@@ -42,8 +42,12 @@ function semCodigoInterno(texto) {
 }
 
 function numero(valor, casas = 2) {
+  if (valor === null || valor === undefined || Number.isNaN(Number(valor))) {
+    return "—";
+  }
+
   return new Intl.NumberFormat("pt-BR", { maximumFractionDigits: casas }).format(
-    valor,
+    Number(valor),
   );
 }
 
@@ -229,6 +233,9 @@ export default function PainelRecompensas() {
               <li key={lote.lote_id} className="cartao-lote">
                 <h3>{lote.lote_id}</h3>
                 <p>
+                  <strong>Token do lote:</strong> {lote.lote_id}
+                </p>
+                <p>
                   <strong>{ROTULO_STATUS[lote.status] || lote.status}</strong>
                 </p>
                 {lote.status === "processado" ? (
@@ -241,7 +248,7 @@ export default function PainelRecompensas() {
                       CO₂ evitado: {numero(lote.co2_evitado_kg_co2eq)} kg CO₂eq
                       (estimativa)
                     </li>
-                    <li>Termo de Doação: {lote.termo_doacao_id}</li>
+                    <li>Termo de Doação: {lote.termo_doacao_id || "—"}</li>
                   </ul>
                 ) : (
                   <p>
