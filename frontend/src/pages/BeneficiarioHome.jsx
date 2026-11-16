@@ -26,6 +26,11 @@ export default function BeneficiarioHome() {
               Acessar solicitação do cidadão
             </Link>
           </li>
+          <li>
+            <Link to="/beneficiario/registrar-entrega">
+              Registrar entrega de lote (AIPA)
+            </Link>
+          </li>
         </ul>
       </nav>
 
