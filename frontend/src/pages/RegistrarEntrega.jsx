@@ -57,7 +57,7 @@ export default function RegistrarEntrega() {
     setErro("");
     setMensagem("");
 
-    const arquivo = gerarExportacaoAipa(dados.lotes);
+    const arquivo = gerarExportacaoAipa(dados.lotes, usuario.id);
 
     if (arquivo.lotes.length === 0) {
       setErro("Nenhuma entrega registrada para exportar.");

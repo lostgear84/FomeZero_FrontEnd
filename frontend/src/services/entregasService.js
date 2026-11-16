@@ -3,6 +3,8 @@
 // acréscimos confirmacao_entrega_texto e simulado). O robô lê o arquivo em
 // AIPA/entrada/lotes_entregues.json.
 
+import { listarLotes } from "./lotesService";
+
 const STORAGE_KEY = "fomezero.entregas.v1";
 const LIMITE_TEXTO = 1000;
 
@@ -63,6 +65,14 @@ export function registrarEntrega(dados, usuario) {
     throw new Error("Selecione o lote de doação entregue.");
   }
 
+  const lote = listarLotes().find((item) => item.lote_id === loteId);
+
+  if (!lote) {
+    throw new Error(
+      "O lote informado não foi encontrado. Selecione um lote disponível.",
+    );
+  }
+
   if (texto.length < 5) {
     throw new Error(
       "Escreva a confirmação da entrega, informando quantos kg chegaram e se houve algum problema.",
@@ -82,7 +92,7 @@ export function registrarEntrega(dados, usuario) {
   }
 
   const entrega = {
-    lote_id: loteId,
+    lote_id: lote.lote_id,
     beneficiario: { id: usuario.id },
     confirmacao_entrega_texto: texto,
     entrega_confirmada_em: new Date().toISOString(),
@@ -101,11 +111,16 @@ export function registrarEntrega(dados, usuario) {
 
 // Monta o arquivo que o robô da AIPA lê. A quantidade recebida vai como null de
 // propósito: quem extrai os kg do texto do beneficiário é a IA da AIPA.
-export function gerarExportacaoAipa(lotes) {
+// A exportação inclui somente as entregas registradas pelo Beneficiário autenticado.
+export function gerarExportacaoAipa(lotes, beneficiarioId) {
   const porLote = new Map(lotes.map((lote) => [lote.lote_id, lote]));
 
   const exportados = lerEntregas()
-    .filter((entrega) => porLote.has(entrega.lote_id))
+    .filter(
+      (entrega) =>
+        entrega.beneficiario.id === beneficiarioId &&
+        porLote.has(entrega.lote_id),
+    )
     .map((entrega) => {
       const lote = porLote.get(entrega.lote_id);
 
