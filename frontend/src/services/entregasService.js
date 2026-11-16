@@ -4,6 +4,7 @@
 // AIPA/entrada/lotes_entregues.json.
 
 import { listarLotes } from "./lotesService";
+import { resumoIotParaExportacao } from "./iotService";
 
 const STORAGE_KEY = "fomezero.entregas.v1";
 const LIMITE_TEXTO = 1000;
@@ -112,6 +113,8 @@ export function registrarEntrega(dados, usuario) {
 // Monta o arquivo que o robô da AIPA lê. A quantidade recebida vai como null de
 // propósito: quem extrai os kg do texto do beneficiário é a IA da AIPA.
 // A exportação inclui somente as entregas registradas pelo Beneficiário autenticado.
+// O estado térmico e o evento vêm do último registro IoT histórico importado
+// para o lote; sem IoT, permanecem nulos.
 export function gerarExportacaoAipa(lotes, beneficiarioId) {
   const porLote = new Map(lotes.map((lote) => [lote.lote_id, lote]));
 
@@ -123,6 +126,7 @@ export function gerarExportacaoAipa(lotes, beneficiarioId) {
     )
     .map((entrega) => {
       const lote = porLote.get(entrega.lote_id);
+      const iot = resumoIotParaExportacao(lote.lote_id);
 
       return {
         lote_id: lote.lote_id,
@@ -133,8 +137,8 @@ export function gerarExportacaoAipa(lotes, beneficiarioId) {
         quantidade_recebida_kg: null,
         quantidade_aproveitada_kg: null,
         status_logistico: "entregue",
-        estado_termico: null,
-        evento_atual: null,
+        estado_termico: iot ? iot.estado_termico : null,
+        evento_atual: iot ? iot.evento_atual : null,
         entrega_confirmada_em: entrega.entrega_confirmada_em,
         confirmacao_entrega_texto: entrega.confirmacao_entrega_texto,
         doador_nome_ficticio: null,
@@ -145,7 +149,7 @@ export function gerarExportacaoAipa(lotes, beneficiarioId) {
 
   return {
     _aviso:
-      "SIMULADO. Lotes de doação entregues, exportados pelo frontend FOMEZERO (dados fictícios do navegador). Formato CT-03 da AIPA.",
+      "SIMULADO. Lotes de doação entregues, exportados pelo frontend FOMEZERO (dados fictícios do navegador). Formato CT-03 da AIPA. Estado térmico e evento, quando presentes, são registros IoT históricos e não comprovam segurança para consumo.",
     gerado_em: new Date().toISOString(),
     lotes: exportados,
   };

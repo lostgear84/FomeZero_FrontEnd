@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { interpretarLogIot } from "../services/iotImportService";
+import {
+  limparRegistrosIot,
+  salvarRegistrosIot,
+} from "../services/iotService";
 
 function numero(valor, unidade) {
   return Number.isFinite(valor)
@@ -53,8 +57,11 @@ export default function ImportadorIot({ lotes }) {
 
     try {
       const resultado = interpretarLogIot(await selecionado.text(), lotes);
+      const lotesAtualizados = salvarRegistrosIot(resultado.registros);
+
       setDados(resultado);
       setArquivo(selecionado.name);
+      setErro("");
     } catch (falha) {
       setErro(
         `${falha.message || "Não foi possível ler o arquivo."} A visualização anterior, se houver, foi mantida.`,
@@ -65,6 +72,7 @@ export default function ImportadorIot({ lotes }) {
   }
 
   function limpar() {
+    limparRegistrosIot();
     setDados(null);
     setArquivo("");
     setErro("");
@@ -92,8 +100,10 @@ export default function ImportadorIot({ lotes }) {
           recompensas ou validação de segurança para consumo.
         </p>
         <p>
-          A importação fica somente nesta tela. Uma nova importação bem-sucedida
-          substitui a visualização anterior; não altera os lotes cadastrados.
+          Os registros aceitos ficam salvos neste navegador, vinculados ao
+          lote, e podem ser incluídos na exportação para a AIPA. Uma nova
+          importação bem-sucedida substitui os registros anteriores do mesmo
+          lote; não altera os lotes cadastrados.
         </p>
       </aside>
 
@@ -136,7 +146,7 @@ export default function ImportadorIot({ lotes }) {
           </label>
 
           <button type="button" onClick={limpar}>
-            Limpar visualização importada
+            Limpar registros IoT importados
           </button>
 
           <p role="status">{exibidos.length} registro(s) exibido(s).</p>
@@ -190,7 +200,7 @@ export default function ImportadorIot({ lotes }) {
                       </>
                     )}
                     <dt>Origem declarada no payload</dt>
-                    <dd>{m.origem || "Não informada"}</dd>
+                    <dd>{m.origem || "Não informado"}</dd>
                   </dl>
                   <p>
                     Registro histórico importado. Não confirma entrega,
