@@ -66,16 +66,19 @@ Registrar capturas de tela sem dados pessoais reais para:
 - A autenticação é local e demonstrativa.
 - A solicitação do cidadão utiliza regras locais, não um modelo de IA treinado.
 - Os lotes `DEMO-` são fictícios e não representam dispositivos IoT.
-- Pontos, Selo Verde ESG e CO₂ evitado permanecem pendentes até a integração AIPA.
+- Pontos, Selo Verde ESG e CO₂ evitado vêm do robô da AIPA (integrado em 16/11/2026); as regras de pontos e selo são de demonstração e o fator de CO₂ depende de aprovação do grupo.
+- AIPA e VCIA rodam como serviços locais no computador da demonstração; não há hospedagem compartilhada.
 - Não há validação sanitária de alimentos.
 - Nenhum módulo declara que um alimento é seguro para consumo.
 
 ## Pendências de integração
 
-- AIPA: pontos, selo, CO₂ evitado, associação de lote e Doador e tratamento de reprocessamento.
-- GENAI: assistente de consulta para doadores.
+Situação em 16/11/2026:
+
+- AIPA: integrada por serviço local (confirmação da entrega, revisão humana, pontos, selo, CO₂ evitado e Termo de Doação). Pendente: aprovação do grupo para as regras de pontos, selo e fator de CO₂.
+- GENAI: assistente integrado (modo simulado com respostas gravadas; modo integrado pelo link temporário do Colab).
 - IoT: importação histórica implementada; conexão ao vivo não implementada.
-- VCIA: funcionalidade de imagem, sujeita à decisão da equipe.
+- VCIA: triagem por foto integrada com o app local da VCIA; sem hospedagem pública.
 
 ## Capturas anexadas ao repositório
 
@@ -113,3 +116,33 @@ o arquivo foi rejeitado e a visualização válida anterior foi preservada.
 O teste de arquivo maior que 2 MB não foi realizado, por decisão de escopo.
 Os testes de conta sem lote correspondente e temperatura sentinela ainda
 não têm execução confirmada neste registro.
+
+## Validação das integrações VCIA e AIPA — 16/11/2026
+
+Responsável: Leonardo Melo. Dados fictícios; portal parceiro simulado.
+Ambiente: portal local, serviço da AIPA (`servico_aipa.py`, porta 5070) e app
+da VCIA (porta 7860) no mesmo computador.
+
+| Teste | Resultado observado |
+|---|---|
+| Triagem com foto de tomate fresco | “sem sinais visuais de deterioração”; resultado usado no cadastro do lote |
+| Triagem com foto desfocada | Mensagem de nitidez e resultado inconclusivo |
+| Triagem com laranja deteriorada | “sinais visuais de deterioração”; lote registrado com destino compostagem e fora da lista do Beneficiário |
+| App da VCIA desligado | Mensagem de serviço indisponível; nenhum dado alterado |
+| Entrega sem divergência (30 kg) | Validada pela AIPA: 300 pontos, CO₂ evitado de 76,2 kg CO₂eq (estimativa) e Termo de Doação em PDF |
+| Entrega com problema marcado e triagem que pediu avaliação | Encaminhada para revisão humana, com os motivos exibidos |
+| Serviço da AIPA desligado | Entrega salva como pendente; processada depois por “Enviar entregas pendentes à AIPA” |
+| Identificador de lote com espaço | Recusado pelo serviço na primeira versão; corrigido e aceito |
+| Revisão humana: aprovar com 17 kg | Lote processado: 170 pontos e Termo emitido |
+| Revisão humana: reprovar | Lote encerrado sem pontos, com “Reprovado na revisão humana” |
+| Decisão repetida ou revisor identificado por nome | Recusadas pelo serviço |
+| Indicador de serviços no cabeçalho | Verde com o serviço no ar; vermelho com a AIPA desligada; GENAI “simulado” sem link |
+| Tela de revisão em largura de 375 px | Conteúdo legível, sem rolagem horizontal |
+| Demonstração completa com `iniciar_demo.ps1` | Executada sem erros |
+| Lint e build | Concluídos sem erros |
+| Testes automáticos da AIPA (pytest) | 63 aprovados |
+
+O teste de proteção da rota `/operador` para outros perfis seguiu a mesma
+regra já validada para Doador e Beneficiário e não foi repetido isoladamente.
+Nenhuma etapa declara que um alimento é seguro para consumo: a triagem é
+apoio visual e a revisão humana decide sobre a quantidade entregue.

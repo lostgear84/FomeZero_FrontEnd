@@ -11,15 +11,19 @@ e integrações pendentes.
 
 ## Preparação
 
-- Executar o frontend com `npm run dev` na pasta `frontend/`.
-- Conferir as contas fictícias de Doador e Beneficiário.
+- Executar o frontend com `npm run dev` na pasta `frontend/`, ou subir tudo
+  (AIPA, VCIA e portal) com `.\iniciar_demo.ps1` na raiz do repositório.
+- Conferir no cabeçalho a situação dos módulos (AIPA, VCIA e GENAI).
+- Conferir as contas fictícias de Doador, Beneficiário e Operador FOMEZERO.
 - Ter ao menos um lote de arroz cadastrado para demonstrar correspondência.
 - Não reutilizar senhas reais.
 - Não limpar o armazenamento do navegador antes da apresentação.
 - Manter as capturas em `docs/evidencias/` como apoio caso a demonstração
   ao vivo seja interrompida.
 - Conferir o estado do projeto antes da apresentação.
-- Não afirmar integração com AIPA, GENAI, IoT ou VCIA enquanto pendentes.
+- Distinguir o que está integrado em modo local (AIPA, VCIA e GENAI, esta em
+  modo simulado ou pelo link do Colab) do que segue pendente (IoT ao vivo,
+  backend compartilhado).
 
 ## 1. Problema, público e proposta
 
@@ -28,7 +32,9 @@ Fala sugerida:
 “O FOMEZERO aborda o desperdício de alimentos e a dificuldade de organizar
 o acesso a doações. O protótipo representa dois perfis: o Doador, que
 cadastra lotes, e o Beneficiário, que consulta os registros e pode realizar
-uma solicitação. O lote de doação é o registro central desse fluxo.”
+uma solicitação. O lote de doação é o registro central desse fluxo. Um
+terceiro perfil, o Operador FOMEZERO, decide os casos que o robô da AIPA
+encaminha para revisão humana.”
 
 Benefício demonstrado:
 organização do cadastro e facilidade de consulta de registros.
@@ -150,7 +156,8 @@ Apresentar como alinhamento da proposta:
 
 - ODS 2: apoio à organização do acesso a doações de alimentos.
 - ODS 12: organização de doações como proposta para reduzir desperdício.
-- ODS 13: acompanhamento ambiental previsto, ainda sem cálculo validado.
+- ODS 13: CO₂ evitado estimado pela AIPA (fator da FAO, 2013), sem medição
+  real e com a metodologia ainda pendente de aprovação do grupo.
 
 Não apresentar esses objetivos como impactos já medidos pelo protótipo.
 
@@ -174,10 +181,16 @@ commits ou testes a quem não os realizou.
 
 Mostrar o Painel de Recompensas e explicar:
 
-- AIPA: dados e regras de pontos, Selo Verde ESG e CO₂ ainda pendentes.
-- GENAI: assistente do Doador ainda não integrado.
+- AIPA: integrada por serviço local; pontos, Selo Verde ESG e CO₂ evitado vêm
+  do robô. As regras de pontos e selo são de demonstração e o fator de CO₂
+  ainda depende de aprovação do grupo.
+- GENAI: assistente do Doador integrado; modo simulado com respostas
+  gravadas, ou integrado pelo link temporário do Colab (precisa de GPU).
 - IoT: importação histórica disponível em Meus lotes; conexão ao vivo não implementada.
-- VCIA: hospedagem da funcionalidade de imagem depende de decisão da equipe.
+- VCIA: triagem por foto integrada com o app local da VCIA; não há
+  hospedagem pública e o modelo cobre só os oito produtos treinados.
+- Todos os serviços rodam no computador da demonstração; não há backend
+  compartilhado nem sincronização entre dispositivos.
 
 O gerador de lotes fictícios não simula telemetria e não publica MQTT.
 
@@ -188,8 +201,9 @@ o painel. O cadastro de lote não comprova entrega ou aproveitamento.
 
 “O protótipo demonstra cadastro, consulta, persistência local e uma
 solicitação do cidadão conectada a processamento simulado com resposta
-e ação. As integrações e os impactos ainda não comprovados permanecem
-explicitamente identificados como pendentes.”
+e ação. A triagem por foto, o robô pós-entrega com revisão humana e o
+assistente estão integrados em modo local. Os impactos ainda não
+comprovados permanecem identificados como estimativa ou pendência.”
 
 ## Demonstração complementar — importação histórica IoT
 
@@ -204,3 +218,33 @@ explicitamente identificados como pendentes.”
 A importação é histórica, local e temporária. Não é monitoramento ao vivo
 e não exige manter ESP32, broker ou dashboards ligados durante a leitura
 do arquivo já capturado.
+
+## Demonstração complementar — triagem, entrega e revisão humana
+
+Pré-requisito: `.\iniciar_demo.ps1` em execução, com AIPA e VCIA no ar no
+cabeçalho.
+
+1. Doador: abrir Triagem inteligente por foto, enviar a foto de uma fruta e
+   usar o resultado no cadastro do lote (LOTE-A, 20 kg). Cadastrar também
+   LOTE-B, 20 kg.
+2. Beneficiário: registrar a entrega do LOTE-A com 20 kg, sem problema
+   marcado. A AIPA valida a entrega em poucos segundos.
+3. Beneficiário: registrar a entrega do LOTE-B com 15 kg, marcando “Chegou
+   menos do que o cadastrado”. A AIPA encaminha para revisão humana e mostra
+   o motivo.
+4. Operador FOMEZERO: abrir Revisão humana, conferir os kg cadastrado,
+   informado e lido no texto, e aprovar com 15 kg.
+5. Doador: abrir Recompensas e mostrar pontos, CO₂ evitado (estimativa),
+   progresso do Selo Verde ESG e o Termo de Doação em PDF.
+
+Fala sugerida:
+
+“A IA da AIPA lê a confirmação escrita pelo beneficiário e confere a
+quantidade. Quando algo não bate, uma pessoa decide. As recompensas só
+aparecem depois da validação.”
+
+Limites:
+
+- A triagem por foto é apoio visual e não é laudo.
+- Aprovar confirma a quantidade entregue, não a segurança do alimento.
+- O portal parceiro é simulado e os dados são fictícios.
