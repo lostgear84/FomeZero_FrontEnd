@@ -313,3 +313,7 @@ A normalização não apaga ocorrências anteriores. O estado `FRIO_OK`
 
 O log utilizado na validação foi `mqtt-20261111-102301.log`.
 O arquivo original não é incluído automaticamente no repositório.
+ 
+
+ (Esse projeto foi desenvolvido em conjunto em novembro de 2026)
+ 
