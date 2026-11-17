@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { destinoDoPerfil, useAuth } from "../context/auth";
+import TelaAutenticacao from "../components/TelaAutenticacao";
 
 export default function Login() {
   const { entrar } = useAuth();
@@ -27,11 +28,11 @@ export default function Login() {
   }
 
   return (
-    <main className="pagina-autenticacao">
-      <h1>Entrar no FOMEZERO</h1>
+    <TelaAutenticacao>
+      <h1>Que bom te ver por aqui!</h1>
       <p id="aviso-login">
-        Autenticação local de demonstração. Entre com uma conta fictícia
-        cadastrada neste navegador.
+        Entre com a conta fictícia que você criou neste navegador. A
+        autenticação é local, só para demonstração.
       </p>
 
       <form onSubmit={handleSubmit} aria-describedby="aviso-login">
@@ -62,7 +63,7 @@ export default function Login() {
         </button>
       </form>
 
-      <p>Não possui conta? <Link to="/cadastro">Criar conta</Link></p>
-    </main>
+      <p>Ainda não tem conta? <Link to="/cadastro">Criar conta</Link></p>
+    </TelaAutenticacao>
   );
 }

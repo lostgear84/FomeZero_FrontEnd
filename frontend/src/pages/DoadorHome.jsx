@@ -1,43 +1,51 @@
-import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth";
 import GeradorLotesDemo from "../components/GeradorLotesDemo";
+import AtalhoAcao from "../components/AtalhoAcao";
 
 export default function DoadorHome() {
   const { usuario } = useAuth();
 
   return (
     <section aria-labelledby="titulo-doador">
-      <h1 id="titulo-doador">Área do Doador</h1>
-
-      <p>Bem-vindo, {usuario.nome}.</p>
-      <p>
-        Cadastre lotes de doação e consulte os registros associados à sua conta.
-      </p>
+      <div className="boas-vindas">
+        <h1 id="titulo-doador">Olá, {usuario.nome}!</h1>
+        <p>
+          O que sobrou hoje pode virar a refeição de alguém. Cadastre um lote
+          de doação e acompanhe as suas recompensas.
+        </p>
+      </div>
 
       <nav aria-label="Ações do doador">
         <ul className="acoes-doador">
-          <li>
-            <Link to="/doador/triagem">Triagem inteligente por foto</Link>
-          </li>
-          <li>
-            <Link to="/doador/cadastro-lote">Cadastrar lote de doação</Link>
-          </li>
-          <li>
-            <Link to="/doador/meus-lotes">Consultar meus lotes</Link>
-          </li>
-          <li>
-            <Link to="/recompensas">Acessar painel de recompensas</Link>
-          </li>
-          <li>
-            <Link to="/doador/assistente">
-              Tirar dúvidas com o assistente (GENAI)
-            </Link>
-          </li>
+          <AtalhoAcao
+            para="/doador/triagem"
+            icone="📸"
+            titulo="Triagem inteligente por foto"
+            materia="vcia"
+          />
+          <AtalhoAcao
+            para="/doador/cadastro-lote"
+            icone="🥕"
+            titulo="Cadastrar lote de doação"
+          />
+          <AtalhoAcao para="/doador/meus-lotes" icone="📦" titulo="Meus lotes" />
+          <AtalhoAcao
+            para="/recompensas"
+            icone="🏅"
+            titulo="Painel de recompensas"
+            materia="aipa"
+          />
+          <AtalhoAcao
+            para="/doador/assistente"
+            icone="💬"
+            titulo="Tirar dúvidas com o assistente"
+            materia="genai"
+          />
         </ul>
       </nav>
 
       <aside className="aviso-local" aria-label="Limites da demonstração">
-        <h2>Demonstração local</h2>
+        <h2>Como funciona nesta demonstração</h2>
         <p>
           Use somente dados fictícios. Os cadastros ficam neste navegador e
           não são sincronizados com outros dispositivos.
@@ -45,7 +53,8 @@ export default function DoadorHome() {
         <p>
           Cadastrar um lote não confirma entrega, segurança para consumo ou
           direito a pontos e selos. Pontos e Selo Verde ESG só aparecem depois
-          que o beneficiário registra a entrega e o robô da AIPA processa o lote.
+          que o beneficiário registra a entrega e o robô pós-entrega valida o
+          lote.
         </p>
       </aside>
 

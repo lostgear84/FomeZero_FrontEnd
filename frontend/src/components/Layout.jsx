@@ -1,13 +1,34 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { destinoDoPerfil, useAuth } from "../context/auth";
 import StatusServicos from "./StatusServicos";
+import { MATERIAS } from "../materias";
+import logoBranco from "../assets/marca/logo-branco.png";
+import logoVermelho from "../assets/marca/logo-vermelho.png";
+
+const MENU = {
+  doador: [
+    { para: "/doador", rotulo: "Início", fim: true },
+    { para: "/doador/meus-lotes", rotulo: "Meus lotes" },
+    { para: "/recompensas", rotulo: "Recompensas" },
+  ],
+  beneficiario: [
+    { para: "/beneficiario", rotulo: "Início", fim: true },
+    { para: "/beneficiario/lotes-disponiveis", rotulo: "Lotes disponíveis" },
+    { para: "/beneficiario/registrar-entrega", rotulo: "Registrar entrega" },
+  ],
+  operador: [{ para: "/operador", rotulo: "Revisão humana", fim: true }],
+};
+
+const ROTULO_PERFIL = {
+  doador: "Doador",
+  beneficiario: "Beneficiário",
+  operador: "Operador",
+};
 
 export default function Layout() {
   const { usuario, sair } = useAuth();
   const navigate = useNavigate();
-  const doador = usuario?.perfil === "doador";
-  const operador = usuario?.perfil === "operador";
-  const rotuloPerfil = doador ? "Doador" : operador ? "Operador" : "Beneficiário";
+  const itens = MENU[usuario.perfil] || MENU.beneficiario;
 
   function handleSair() {
     sair();
@@ -20,47 +41,48 @@ export default function Layout() {
 
       <header className="cabecalho">
         <Link to={destinoDoPerfil(usuario.perfil)} className="marca">
-          FOMEZERO
+          <img src={logoBranco} alt="FOMEZERO, página inicial" />
         </Link>
 
         <nav aria-label="Navegação principal">
           <ul className="menu">
-            {doador && (
-              <>
-                <li><NavLink to="/doador" end>Doador</NavLink></li>
-                <li><NavLink to="/recompensas">Recompensas</NavLink></li>
-              </>
-            )}
-            {operador && (
-              <li><NavLink to="/operador">Revisão humana</NavLink></li>
-            )}
-            {!doador && !operador && (
-              <li>
-                <NavLink to="/beneficiario">Beneficiário</NavLink>
+            {itens.map((item) => (
+              <li key={item.para}>
+                <NavLink to={item.para} end={item.fim}>
+                  {item.rotulo}
+                </NavLink>
               </li>
-            )}
+            ))}
           </ul>
         </nav>
 
-        <StatusServicos />
-
         <div className="usuario">
           <span>
-            {usuario.nome} — {rotuloPerfil}
+            {usuario.nome} · {ROTULO_PERFIL[usuario.perfil] || "Beneficiário"}
           </span>
-          <button type="button" onClick={handleSair}>Sair</button>
+          <button type="button" onClick={handleSair}>
+            Sair
+          </button>
         </div>
       </header>
 
+      <div className="faixa-status">
+        <span>Módulos de IA:</span>
+        <StatusServicos />
+      </div>
+
       <main id="conteudo-principal" className="conteudo" tabIndex={-1}>
+        <img src={logoVermelho} alt="" className="marca-dagua" aria-hidden="true" />
         <Outlet />
       </main>
 
       <footer className="rodape">
+        <img src={logoVermelho} alt="" aria-hidden="true" />
         <p>
-          FOMEZERO — protótipo acadêmico. Cadastros locais de demonstração;
-          use somente dados fictícios.
+          Protótipo acadêmico da Global Solution FIAP 2026. Cadastros locais de
+          demonstração: use somente dados fictícios.
         </p>
+        <p>Portal desenvolvido em {MATERIAS.femd}.</p>
       </footer>
     </div>
   );

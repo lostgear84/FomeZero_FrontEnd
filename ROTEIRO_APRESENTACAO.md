@@ -13,7 +13,7 @@ e integrações pendentes.
 
 - Executar o frontend com `npm run dev` na pasta `frontend/`, ou subir tudo
   (AIPA, VCIA e portal) com `.\iniciar_demo.ps1` na raiz do repositório.
-- Conferir no cabeçalho a situação dos módulos (AIPA, VCIA e GENAI).
+- Conferir na faixa abaixo do cabeçalho a situação dos módulos (AIPA, VCIA e GENAI).
 - Conferir as contas fictícias de Doador, Beneficiário e Operador FOMEZERO.
 - Ter ao menos um lote de arroz cadastrado para demonstrar correspondência.
 - Não reutilizar senhas reais.
@@ -132,7 +132,10 @@ Limites:
 - Não reserva alimentos nem confirma entrega.
 - A solicitação e a resposta não formam histórico persistente.
 
-## 7. Acessibilidade e proteção de dados
+## 7. Identidade visual, acessibilidade e proteção de dados
+
+Mostrar o logo do FOMEZERO no login, a paleta vermelha inspirada em apps de
+delivery e o nome oficial da matéria entre parênteses ao lado de cada módulo.
 
 Demonstrar:
 
@@ -235,7 +238,8 @@ cabeçalho.
 4. Operador FOMEZERO: abrir Revisão humana, conferir os kg cadastrado,
    informado e lido no texto, e aprovar com 15 kg.
 5. Doador: abrir Recompensas e mostrar pontos, CO₂ evitado (estimativa),
-   progresso do Selo Verde ESG e o Termo de Doação em PDF.
+   progresso do Selo Verde ESG e o Termo de Doação em PDF. Com 50 kg ou mais
+   validados, o selo Bronze acende e aparece o botão do certificado do selo.
 
 Fala sugerida:
 

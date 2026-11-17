@@ -9,6 +9,7 @@ import {
   registrarTriagem,
   salvarUrlVcia,
 } from "../services/triagemService";
+import Materia from "../components/Materia";
 
 function porcentagem(valor) {
   return `${Math.round((Number(valor) || 0) * 100)}%`;
@@ -66,7 +67,9 @@ export default function TriagemInteligente() {
     <section aria-labelledby="titulo-triagem">
       <Link to="/doador">Voltar à área do Doador</Link>
 
-      <h1 id="titulo-triagem">Triagem inteligente por foto</h1>
+      <h1 id="titulo-triagem">
+        Triagem inteligente por foto <Materia de="vcia" />
+      </h1>
 
       <p id="aviso-triagem">
         Fotografe <strong>um item de hortifrúti por vez, de cima, sobre fundo

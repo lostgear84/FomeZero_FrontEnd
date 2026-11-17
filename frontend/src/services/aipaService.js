@@ -61,6 +61,12 @@ export function urlTermo(loteId, url = lerUrlAipa()) {
   return `${url}/api/termos/${encodeURIComponent(loteId)}`;
 }
 
+// Certificado do Selo Verde ESG: a AIPA confere o selo no estado dela antes de gerar o PDF.
+export function urlCertificado(doadorId, nomeFicticio, url = lerUrlAipa()) {
+  const nome = encodeURIComponent(String(nomeFicticio || "").slice(0, 60));
+  return `${url}/api/certificados/${encodeURIComponent(doadorId)}?nome=${nome}`;
+}
+
 export const FAIXAS_SELO = [
   { selo: "Bronze", kg: 50 },
   { selo: "Prata", kg: 200 },

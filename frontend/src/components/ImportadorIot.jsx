@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { interpretarLogIot } from "../services/iotImportService";
+import Materia from "./Materia";
 
 function numero(valor, unidade) {
   return Number.isFinite(valor)
@@ -79,7 +80,9 @@ export default function ImportadorIot({ lotes }) {
 
   return (
     <section className="secao-recompensas" aria-labelledby="titulo-iot">
-      <h2 id="titulo-iot">Registros IoT do lote</h2>
+      <h2 id="titulo-iot">
+        Registros IoT do lote <Materia de="iot" />
+      </h2>
 
       <aside className="aviso-local" aria-label="Limites da importação IoT">
         <h3>Arquivo histórico — não é monitoramento ao vivo</h3>

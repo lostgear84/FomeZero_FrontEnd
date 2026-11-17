@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { destinoDoPerfil, useAuth } from "../context/auth";
+import TelaAutenticacao from "../components/TelaAutenticacao";
+import { MATERIAS } from "../materias";
 
 export default function Cadastro() {
   const { cadastrar } = useAuth();
@@ -29,11 +31,11 @@ export default function Cadastro() {
   }
 
   return (
-    <main className="pagina-autenticacao">
-      <h1>Criar conta no FOMEZERO</h1>
+    <TelaAutenticacao>
+      <h1>Crie sua conta</h1>
       <p id="aviso-cadastro">
-        Demonstração local. Use somente nome, e-mail e senha fictícios.
-        A conta ficará salva apenas neste navegador.
+        Use somente nome, e-mail e senha fictícios. A conta fica salva
+        apenas neste navegador.
       </p>
 
       <form onSubmit={handleSubmit} aria-describedby="aviso-cadastro">
@@ -80,9 +82,11 @@ export default function Cadastro() {
           onChange={(evento) => setPerfil(evento.target.value)}
           required
         >
-          <option value="doador">Doador</option>
-          <option value="beneficiario">Beneficiário</option>
-          <option value="operador">Operador FOMEZERO (revisão humana)</option>
+          <option value="doador">Doador: quero doar alimentos</option>
+          <option value="beneficiario">Beneficiário: recebo doações</option>
+          <option value="operador">
+            Operador FOMEZERO: revisão humana ({MATERIAS.aipa})
+          </option>
         </select>
 
         {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
@@ -92,7 +96,7 @@ export default function Cadastro() {
         </button>
       </form>
 
-      <p>Já possui conta? <Link to="/login">Entrar</Link></p>
-    </main>
+      <p>Já tem conta? <Link to="/login">Entrar</Link></p>
+    </TelaAutenticacao>
   );
 }

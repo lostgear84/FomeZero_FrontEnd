@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/auth";
 import {
+  FAIXAS_SELO,
   atualizarDaAipa,
   importarArquivoCt04,
   lerResultadosAipa,
@@ -10,9 +11,15 @@ import {
   proximoSelo,
   resumoDoDoador,
   rotuloSituacao,
+  urlCertificado,
   urlTermo,
 } from "../services/aipaService";
+import Materia from "../components/Materia";
+import seloBronze from "../assets/marca/selo-bronze.jpg";
+import seloPrata from "../assets/marca/selo-prata.jpg";
+import seloOuro from "../assets/marca/selo-ouro.jpg";
 
+const IMAGEM_SELO = { Bronze: seloBronze, Prata: seloPrata, Ouro: seloOuro };
 
 function frase(texto) {
   const limpo = String(texto || "").trim();
@@ -29,10 +36,13 @@ function numero(valor, casas = 2) {
   );
 }
 
-function IndicadorRecompensa({ titulo, valor, descricao }) {
+function IndicadorRecompensa({ titulo, valor, descricao, imagem }) {
   return (
     <article className="indicador-recompensa">
       <h2>{titulo}</h2>
+      {imagem && (
+        <img src={imagem} alt={`Selo Verde ESG ${valor}`} className="selo-imagem" />
+      )}
       <p className="valor-recompensa">{valor}</p>
       <p>{descricao}</p>
     </article>
@@ -59,6 +69,31 @@ function ProgressoSelo({ kgAcumulado }) {
         {progresso.percentual}%
       </progress>
     </div>
+  );
+}
+
+// Mostra os três níveis; só acende o que a AIPA atribuiu (o front não calcula o selo).
+function GaleriaSelos({ seloAtual }) {
+  const nivelAtual = FAIXAS_SELO.findIndex((faixa) => faixa.selo === seloAtual);
+
+  return (
+    <ul className="galeria-selos" aria-label="Níveis do Selo Verde ESG">
+      {FAIXAS_SELO.map((faixa, indice) => {
+        const conquistado = nivelAtual >= indice;
+
+        return (
+          <li key={faixa.selo}>
+            <img
+              src={IMAGEM_SELO[faixa.selo]}
+              alt=""
+              className={`selo-imagem${conquistado ? "" : " selo-bloqueado"}`}
+            />
+            {faixa.selo} · {faixa.kg} kg
+            <span>{conquistado ? "conquistado" : "a conquistar"}</span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -113,7 +148,9 @@ export default function PainelRecompensas() {
     <section aria-labelledby="titulo-recompensas">
       <Link to="/doador">Voltar à área do Doador</Link>
 
-      <h1 id="titulo-recompensas">Painel de Recompensas</h1>
+      <h1 id="titulo-recompensas">
+        Painel de recompensas <Materia de="aipa" />
+      </h1>
 
       <p>
         Doador: <span>{usuario.nome}</span>
@@ -123,7 +160,7 @@ export default function PainelRecompensas() {
         className="secao-recompensas"
         aria-labelledby="titulo-importar-aipa"
       >
-        <h2 id="titulo-importar-aipa">Resultados do robô da AIPA</h2>
+        <h2 id="titulo-importar-aipa">Resultados do robô pós-entrega</h2>
         <p>
           Quando o beneficiário confirma a entrega, o robô da AIPA processa o
           lote na hora e este painel se atualiza. Pontos, Selo Verde ESG e CO₂
@@ -168,12 +205,12 @@ export default function PainelRecompensas() {
 
       {!temResultados && (
         <aside className="aviso-local" aria-label="Situação da integração">
-          <h2>Nenhum resultado da AIPA para esta conta</h2>
+          <h2>Ainda não há recompensas nesta conta</h2>
           <p>
             Nenhum ponto, selo ou valor de CO₂ evitado foi atribuído a esta
             conta. O cadastro de um lote não comprova entrega nem gera
             recompensas: elas só aparecem depois que o beneficiário confirma a
-            entrega e o robô da AIPA valida o lote.
+            entrega e o robô pós-entrega valida o lote.
           </p>
         </aside>
       )}
@@ -197,6 +234,7 @@ export default function PainelRecompensas() {
               : "Não atribuído"
           }
           descricao="Pelo total acumulado: Bronze a partir de 50 kg, Prata 200 kg, Ouro 500 kg. Reconhecimento interno, não certificação."
+          imagem={resumo?.selo ? IMAGEM_SELO[resumo.selo] : null}
         />
 
         <IndicadorRecompensa
@@ -210,16 +248,44 @@ export default function PainelRecompensas() {
         />
       </div>
 
-      {resumo && resumo.kgAcumulado !== null && (
-        <section
-          className="secao-recompensas"
-          aria-labelledby="titulo-progresso"
-        >
-          <h2 id="titulo-progresso">Progresso do Selo Verde ESG</h2>
-          <p>{numero(resumo.kgAcumulado)} kg recebidos e validados no total.</p>
-          <ProgressoSelo kgAcumulado={resumo.kgAcumulado} />
-        </section>
-      )}
+      <section
+        className="secao-recompensas"
+        aria-labelledby="titulo-progresso"
+      >
+        <h2 id="titulo-progresso">Níveis do Selo Verde ESG</h2>
+        {resumo && resumo.kgAcumulado !== null ? (
+          <>
+            <p>{numero(resumo.kgAcumulado)} kg recebidos e validados no total.</p>
+            <ProgressoSelo kgAcumulado={resumo.kgAcumulado} />
+          </>
+        ) : (
+          <p>Os selos acendem conforme as entregas validadas somam kg.</p>
+        )}
+        <GaleriaSelos seloAtual={resumo?.selo || null} />
+
+        {resumo?.selo && (
+          <div className="certificado-selo">
+            {resultados?.servico_url ? (
+              <a
+                className="botao-link"
+                href={urlCertificado(usuario.id, usuario.nome, resultados.servico_url)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Baixar certificado do Selo {resumo.selo} (PDF)
+              </a>
+            ) : (
+              <p>
+                O certificado do Selo {resumo.selo} é gerado pelo serviço local
+                da AIPA. Atualize os resultados pelo serviço para baixá-lo.
+              </p>
+            )}
+            <small>
+              Reconhecimento interno do FOMEZERO, não é certificação oficial.
+            </small>
+          </div>
+        )}
+      </section>
 
       <section
         className="secao-recompensas"

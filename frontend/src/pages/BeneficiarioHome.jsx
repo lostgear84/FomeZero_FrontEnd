@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import AtalhoAcao from "../components/AtalhoAcao";
 import { useAuth } from "../context/auth";
 
 export default function BeneficiarioHome() {
@@ -6,31 +6,32 @@ export default function BeneficiarioHome() {
 
   return (
     <section aria-labelledby="titulo-beneficiario">
-      <h1 id="titulo-beneficiario">Área do Beneficiário</h1>
-
-      <p>Bem-vindo, {usuario.nome}.</p>
-      <p>
-        Consulte os lotes de doação cadastrados e registre uma solicitação
-        fictícia para testar a resposta simulada.
-      </p>
+      <div className="boas-vindas">
+        <h1 id="titulo-beneficiario">Olá, {usuario.nome}!</h1>
+        <p>
+          Veja os lotes de doação disponíveis, faça uma solicitação e confirme
+          o que chegou para liberar as recompensas do doador.
+        </p>
+      </div>
 
       <nav aria-label="Ações do beneficiário">
         <ul className="acoes-doador">
-          <li>
-            <Link to="/beneficiario/lotes-disponiveis">
-              Consultar lotes disponíveis
-            </Link>
-          </li>
-          <li>
-            <Link to="/beneficiario/solicitacao">
-              Acessar solicitação do cidadão
-            </Link>
-          </li>
-          <li>
-            <Link to="/beneficiario/registrar-entrega">
-              Registrar entrega de lote (AIPA)
-            </Link>
-          </li>
+          <AtalhoAcao
+            para="/beneficiario/lotes-disponiveis"
+            icone="🛒"
+            titulo="Lotes disponíveis"
+          />
+          <AtalhoAcao
+            para="/beneficiario/solicitacao"
+            icone="🙋"
+            titulo="Solicitação do cidadão"
+          />
+          <AtalhoAcao
+            para="/beneficiario/registrar-entrega"
+            icone="✅"
+            titulo="Registrar entrega de lote"
+            materia="aipa"
+          />
         </ul>
       </nav>
 
