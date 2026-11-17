@@ -33,7 +33,7 @@ A autenticação é local e demonstrativa. Ela permite validar o fluxo de acesso
 
 ## Funcionalidades implementadas
 
-- Cadastro local de Doador ou Beneficiário.
+- Cadastro local de Doador, Beneficiário ou Operador FOMEZERO.
 - Login local com validação de e-mail e senha.
 - Sessão persistida no navegador.
 - Proteção de rotas por tipo de conta.
@@ -45,19 +45,46 @@ A autenticação é local e demonstrativa. Ela permite validar o fluxo de acesso
 - Geração explícita de lotes fictícios com identificadores `DEMO-`.
 - Registro da entrega do lote pelo Beneficiário (kg recebidos, problemas marcados e texto de confirmação), processado na hora pelo robô da AIPA (serviço local), com exportação em JSON como alternativa.
 - Perfil **Operador FOMEZERO** com a tela de revisão humana (`/operador`): fila dos lotes que a AIPA não validou sozinha, com motivos, kg cadastrado × informado × lido no texto, triagem por foto e IoT; aprovar (com os kg aprovados) gera as recompensas, reprovar encerra sem pontos. O operador é registrado por código, nunca pelo nome.
-- Indicador no cabeçalho com a situação dos módulos de IA (AIPA, VCIA e GENAI: no ar, fora do ar ou simulado), atualizado a cada 30 s.
+- Certificado do Selo Verde ESG em PDF: quando a AIPA atribui o selo, o Painel de Recompensas mostra o botão "Baixar certificado do Selo" (gerado e conferido pelo serviço local da AIPA; reconhecimento interno, não certificação).
+- Faixa abaixo do cabeçalho com a situação dos módulos de IA (AIPA, VCIA e GENAI: no ar, fora do ar ou simulado), atualizado a cada 30 s.
 - Painel de Recompensas do Doador com os resultados da AIPA (atualizados automaticamente ou importados): pontos, Selo Verde ESG, progresso até o próximo selo, CO₂ evitado (estimativa, com metodologia), Termo de Doação em PDF e lotes em revisão humana.
-- Assistente de consulta para doadores (GENAI), com respostas citando documentos oficiais, em modo simulado ou integrado.
-- Triagem inteligente por foto (VCIA), com o modelo real de visão computacional, ligada ao cadastro do lote; itens com sinais visuais de deterioração seguem para compostagem.
+- Assistente de dúvidas para doadores (Generative AI & Advanced Nets), com respostas citando documentos oficiais, em modo simulado ou integrado.
+- Triagem inteligente por foto (Visão Computacional), com o modelo real de visão computacional, ligada ao cadastro do lote; itens com sinais visuais de deterioração seguem para compostagem.
+- Nome oficial da matéria entre parênteses ao lado dos títulos de cada módulo (por exemplo, "Triagem inteligente por foto (Visão Computacional)"), para o professor localizar a sua disciplina no portal.
+- Identidade visual própria do FOMEZERO, inspirada em apps de delivery (ver "Identidade visual").
+
+## Identidade visual
+
+Projeto acadêmico com visual inspirado em apps de delivery de comida, mantendo a marca FOMEZERO (logos do grupo em `src/assets/marca/`).
+
+- **Cores:** vermelho `#EA1D2C` (marca) e `#EB0033` (destaques), texto `#3E3E3E`, títulos `#1A1A1A`, cinzas `#717171`, `#ADADAD` e `#F7F7F7`, creme `#F9F2E8` nos avisos. Definidas como variáveis no início de `src/index.css`.
+- **Tipografia:** Nunito (títulos e botões) e Nunito Sans (texto), do Google Fonts. Sem internet, o navegador usa uma fonte do sistema.
+- **Logos:** o logo principal (branco sobre vermelho) aparece no login, no cadastro e no cabeçalho; o logo invertido (vermelho) aparece transparente como marca d'água nas páginas internas e no rodapé.
+- **Selos:** as imagens do Selo Verde ESG (Bronze, Prata e Ouro) aparecem no Painel de Recompensas, apagadas até a AIPA atribuir o nível.
+- **Componentes:** botões em pílula, cartões arredondados com sombra suave, atalhos com ícone nas telas iniciais e faixa com a situação dos módulos de IA.
+
+| Módulo no portal | Matéria |
+|---|---|
+| Triagem inteligente por foto | Visão Computacional |
+| Assistente de dúvidas | Generative AI & Advanced Nets |
+| Registro de entrega, Painel de Recompensas, Revisão humana e certificado | AI for Robotic Process Automation |
+| Registros IoT do lote | Physical Computing, Embedded AI, Robotics & Cognitive IoT |
+| Portal (este repositório) | Front End & Mobile Development |
 
 ## Arquitetura do frontend
 
 ```text
 frontend/src/
+├── assets/marca/            # logos e selos do FOMEZERO
 ├── components/
+│   ├── AtalhoAcao.jsx
 │   ├── GeradorLotesDemo.jsx
+│   ├── ImportadorIot.jsx
 │   ├── Layout.jsx
-│   └── ProtectedRoute.jsx
+│   ├── Materia.jsx
+│   ├── ProtectedRoute.jsx
+│   ├── StatusServicos.jsx
+│   └── TelaAutenticacao.jsx
 ├── context/
 │   ├── AuthContext.jsx
 │   └── auth.js
@@ -75,8 +102,9 @@ frontend/src/
 │   ├── MeusLotes.jsx
 │   ├── PainelRecompensas.jsx
 │   ├── RegistrarEntrega.jsx
-│   ├── TriagemInteligente.jsx
-│   └── SolicitacaoCidadao.jsx
+│   ├── RevisaoHumana.jsx
+│   ├── SolicitacaoCidadao.jsx
+│   └── TriagemInteligente.jsx
 ├── services/
 │   ├── aipaService.js
 │   ├── assistenteService.js
@@ -85,6 +113,8 @@ frontend/src/
 │   ├── solicitacaoService.js
 │   └── triagemService.js
 ├── App.jsx
+├── index.css                # identidade visual (variáveis de cor e fonte)
+├── materias.js              # nomes oficiais das matérias
 └── main.jsx
 ```
 
@@ -97,7 +127,7 @@ frontend/src/
 | `ProtectedRoute` | Impede acesso de usuário não autenticado a rotas protegidas | Recebe `children` |
 | `Layout` | Estrutura visual, menu e navegação | Utiliza `Outlet` para renderizar as rotas internas |
 | `Login` | Realiza login local | Estados de e-mail, senha, erro e processamento |
-| `Cadastro` | Cria conta local de Doador ou Beneficiário | Estados de nome, e-mail, senha, perfil, erro e processamento |
+| `Cadastro` | Cria conta local de Doador, Beneficiário ou Operador | Estados de nome, e-mail, senha, perfil, erro e processamento |
 | `CadastroLote` | Cadastra um lote de doação | Estados de identificador, alimento, quantidade e condição |
 | `MeusLotes` | Consulta os lotes do Doador | Estados de dados e busca |
 | `LotesDisponiveis` | Consulta lotes disponíveis ao Beneficiário | Estados de dados, busca e mensagem |
@@ -107,6 +137,12 @@ frontend/src/
 | `PainelRecompensas` | Exibe o acompanhamento de recompensas | Utiliza o componente `IndicadorRecompensa` |
 | `IndicadorRecompensa` | Apresenta um indicador do painel | Recebe `titulo`, `valor` e `descricao` |
 | `GeradorLotesDemo` | Gera lotes fictícios para demonstração | Estados de confirmação, processamento, conclusão, mensagem e erro |
+| `TelaAutenticacao` | Moldura vermelha com o logo principal no login e no cadastro | Recebe `children` |
+| `AtalhoAcao` | Cartão de atalho com ícone nas telas iniciais | Recebe `para`, `icone`, `titulo` e `materia` |
+| `Materia` | Mostra o nome oficial da matéria entre parênteses | Recebe `de` (vcia, genai, aipa, iot ou femd) |
+| `StatusServicos` | Situação dos módulos de IA no topo das páginas | Estado `servicos`, atualizado a cada 30 s |
+| `GaleriaSelos` | Selos Bronze, Prata e Ouro no Painel de Recompensas | Recebe `seloAtual` (vindo da AIPA) |
+| `RevisaoHumana` | Fila de revisão humana do Operador | Estados de fila, erro, carregamento e decididos |
 
 ## Rotas e acesso
 
@@ -118,14 +154,14 @@ frontend/src/
 | `/doador` | Protegida | Área inicial do Doador |
 | `/doador/cadastro-lote` | Protegida | Cadastro de lote de doação |
 | `/doador/meus-lotes` | Protegida | Consulta dos lotes do Doador |
-| `/doador/assistente` | Protegida | Assistente de consulta (GENAI) |
-| `/doador/triagem` | Protegida | Triagem inteligente por foto (VCIA) |
+| `/doador/assistente` | Protegida | Assistente de dúvidas (Generative AI & Advanced Nets) |
+| `/doador/triagem` | Protegida | Triagem inteligente por foto (Visão Computacional) |
 | `/beneficiario` | Protegida | Área inicial do Beneficiário |
 | `/beneficiario/lotes-disponiveis` | Protegida | Consulta de lotes disponíveis |
 | `/beneficiario/solicitacao` | Protegida | Solicitação do cidadão |
 | `/operador` | Protegida (Operador) | Fila de revisão humana da AIPA: aprovar ou reprovar |
 | `/beneficiario/registrar-entrega` | Protegida | Registro da entrega, processamento na AIPA e situação de cada entrega |
-| `/recompensas` | Protegida | Painel de Recompensas do Doador |
+| `/recompensas` | Protegida | Painel de Recompensas do Doador, com selos e certificado (AI for Robotic Process Automation) |
 | `*` | Público | Renderiza a tela de login para caminhos não reconhecidos |
 
 O componente `ProtectedRoute` verifica a sessão e restringe as áreas por perfil antes de renderizar o conteúdo protegido. Usuários não autenticados são direcionados para `/login`; usuários autenticados que tentam acessar a área de outro perfil são direcionados para sua própria área.
@@ -154,8 +190,8 @@ O cálculo de CO₂ não é feito pelo frontend. O valor exibido vem do robô da
 
 Além das regras locais, há dois processamentos com IA de outros módulos do FOMEZERO:
 
-- **Assistente de consulta (GENAI):** RAG sobre o corpus de documentos oficiais da PLN (Lei 15.224/2025, RDC ANVISA 216/2004 e guias da ANVISA). Modo simulado (padrão): as 10 respostas reais gravadas pela GENAI em `src/data/genai_respostas_SIMULADO.json`. Modo integrado: o usuário informa o link do Gradio do notebook da GENAI e o frontend chama o endpoint `/consultar` com `@gradio/client`; se a conexão falhar, a tela avisa e volta ao modo simulado.
-- **Robô pós-entrega (AIPA):** a IA da AIPA lê a confirmação escrita pelo beneficiário, extrai os kg recebidos e identifica ocorrências; casos duvidosos vão para revisão humana. Ao confirmar a entrega, o frontend envia o lote ao serviço local da AIPA e mostra o resultado; sem o serviço, exporta e importa por arquivo.
+- **Assistente de dúvidas (Generative AI & Advanced Nets):** RAG sobre o corpus de documentos oficiais da PLN (Lei 15.224/2025, RDC ANVISA 216/2004 e guias da ANVISA). Modo simulado (padrão): as 10 respostas reais gravadas pela GENAI em `src/data/genai_respostas_SIMULADO.json`. Modo integrado: o usuário informa o link do Gradio do notebook da GENAI e o frontend chama o endpoint `/consultar` com `@gradio/client`; se a conexão falhar, a tela avisa e volta ao modo simulado.
+- **Robô pós-entrega (AI for Robotic Process Automation):** a IA da AIPA lê a confirmação escrita pelo beneficiário, extrai os kg recebidos e identifica ocorrências; casos duvidosos vão para revisão humana. Ao confirmar a entrega, o frontend envia o lote ao serviço local da AIPA e mostra o resultado; sem o serviço, exporta e importa por arquivo.
 
 ## Acessibilidade
 
@@ -257,7 +293,7 @@ A sequência principal da demonstração inclui:
 
 As capturas complementam o relato dos testes e a demonstração ao vivo; não comprovam integrações que permanecem pendentes.
 
-## Triagem inteligente por foto (VCIA)
+## Triagem inteligente por foto (Visão Computacional)
 
 O doador acessa **Triagem inteligente por foto** (`/doador/triagem`), envia a foto de um item de hortifrúti e o
 frontend chama o modelo real de visão computacional do FOMEZERO (EfficientNet-B0, repositório

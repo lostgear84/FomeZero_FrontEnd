@@ -9,6 +9,7 @@ import {
   motivoLegivel,
   rotuloSituacao,
 } from "../services/aipaService";
+import Materia from "../components/Materia";
 
 const ROTULO_DIVERGENCIA = Object.fromEntries(
   DIVERGENCIAS.map((item) => [item.codigo, item.rotulo]),
@@ -222,7 +223,9 @@ export default function RevisaoHumana() {
 
   return (
     <section aria-labelledby="titulo-revisao">
-      <h1 id="titulo-revisao">Revisão humana</h1>
+      <h1 id="titulo-revisao">
+        Revisão humana <Materia de="aipa" />
+      </h1>
 
       <p>
         Lotes de doação que o robô da AIPA não validou sozinho. Confira os

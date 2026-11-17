@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth";
 import { cadastrarLote } from "../services/lotesService";
 import { AVISO_TRIAGEM, ehDeterioracao } from "../services/triagemService";
+import Materia from "../components/Materia";
 
 export default function CadastroLote() {
   const { usuario } = useAuth();
@@ -63,7 +64,9 @@ export default function CadastroLote() {
 
       {triagem ? (
         <aside className="aviso-local" aria-label="Triagem visual anexada">
-          <h2>Triagem visual anexada</h2>
+          <h2>
+            Triagem visual anexada <Materia de="vcia" />
+          </h2>
           <p>
             {triagem.classe} (confiança {Math.round(triagem.confianca * 100)}%),
             produto {triagem.produto || "não identificado"}. O texto sugerido

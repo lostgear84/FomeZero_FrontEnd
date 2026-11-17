@@ -7,6 +7,7 @@ import {
   lerUrlIntegrada,
   salvarUrlIntegrada,
 } from "../services/assistenteService";
+import Materia from "../components/Materia";
 
 const ROTULO_STATUS = {
   respondida: "Respondida com base nos documentos",
@@ -116,7 +117,9 @@ export default function AssistenteConsulta() {
     <section aria-labelledby="titulo-assistente">
       <Link to="/doador">Voltar à área do Doador</Link>
 
-      <h1 id="titulo-assistente">Assistente de consulta FOMEZERO</h1>
+      <h1 id="titulo-assistente">
+        Tirar dúvidas com o assistente <Materia de="genai" />
+      </h1>
 
       <p id="aviso-assistente">
         Tire dúvidas sobre doação segura de alimentos. As respostas vêm de

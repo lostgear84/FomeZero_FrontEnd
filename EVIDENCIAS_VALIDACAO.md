@@ -146,3 +146,19 @@ O teste de proteção da rota `/operador` para outros perfis seguiu a mesma
 regra já validada para Doador e Beneficiário e não foi repetido isoladamente.
 Nenhuma etapa declara que um alimento é seguro para consumo: a triagem é
 apoio visual e a revisão humana decide sobre a quantidade entregue.
+
+## Validação da identidade visual e do certificado do selo — 17/11/2026
+
+Responsável: Leonardo Melo. Dados fictícios.
+
+| Teste | Resultado observado |
+|---|---|
+| Login e cadastro | Fundo vermelho, logo principal e cartão branco; perfis Doador, Beneficiário e Operador |
+| Telas iniciais | Faixa de boas-vindas e atalhos com ícone e nome oficial da matéria |
+| Títulos dos módulos | Nome oficial da matéria entre parênteses (Visão Computacional; Generative AI & Advanced Nets; AI for Robotic Process Automation; Physical Computing, Embedded AI, Robotics & Cognitive IoT) |
+| Painel sem resultados | Selos Bronze, Prata e Ouro apagados; nenhum botão de certificado |
+| Doador com 55 kg validados | Selo Bronze aceso e botão "Baixar certificado do Selo Bronze (PDF)" |
+| Certificado em PDF | Nível, nome fictício, kg, lotes, pontos, código de conferência e aviso de que não é certificação |
+| Certificado sem selo | Recusado pelo serviço da AIPA |
+| Interface em 375 px | Atalhos em duas colunas; cabeçalho e faixa de módulos sem rolagem horizontal |
+| Lint e build | Concluídos sem erros |

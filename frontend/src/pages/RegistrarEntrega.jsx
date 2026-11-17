@@ -20,6 +20,7 @@ import {
   rotuloSituacao,
   salvarUrlAipa,
 } from "../services/aipaService";
+import Materia from "../components/Materia";
 
 const ROTULO_DIVERGENCIA = Object.fromEntries(
   DIVERGENCIAS.map((item) => [item.codigo, item.rotulo]),
@@ -207,7 +208,9 @@ export default function RegistrarEntrega() {
     <section aria-labelledby="titulo-registrar-entrega">
       <Link to="/beneficiario">Voltar à área do Beneficiário</Link>
 
-      <h1 id="titulo-registrar-entrega">Registrar entrega de lote</h1>
+      <h1 id="titulo-registrar-entrega">
+        Registrar entrega de lote <Materia de="aipa" />
+      </h1>
 
       <p id="aviso-entrega">
         Informe quantos kg chegaram, marque se houve algum problema e confirme
@@ -369,7 +372,7 @@ export default function RegistrarEntrega() {
         className="secao-recompensas"
         aria-labelledby="titulo-exportar-aipa"
       >
-        <h2 id="titulo-exportar-aipa">Entregas pendentes na AIPA</h2>
+        <h2 id="titulo-exportar-aipa">Entregas aguardando o robô pós-entrega</h2>
         <p>
           {naoProcessadas.length === 0
             ? "Todas as suas entregas já foram processadas pela AIPA."
