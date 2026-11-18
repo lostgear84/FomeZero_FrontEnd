@@ -1,355 +1,467 @@
-# FOMEZERO — Frontend FEMD
+# FOMEZERO — Front End & Mobile Development
 
-O FOMEZERO é o frontend React + Vite do protótipo integrado CitizenTech com IA para apoiar o cidadão. A aplicação organiza o registro de lotes de doação, a consulta de alimentos disponíveis, a solicitação do cidadão e o acompanhamento de recompensas.
+Frontend do **Protótipo Integrado CitizenTech com IA para Apoiar o Cidadão**, desenvolvido em **React + Vite** para a Global Solution 2026.2 da FIAP.
 
-O projeto foi desenvolvido para a disciplina Front End & Mobile Development da Global Solution 2026.2, da FIAP.
+O FOMEZERO organiza o cadastro e a consulta de lotes de doação, o registro de solicitações do cidadão, a confirmação das entregas e o acompanhamento de recompensas dos doadores.
+
+Este repositório apresenta a entrega da disciplina **Front End & Mobile Development**, incluindo o código-fonte da interface, as instruções de execução e as evidências de validação.
 
 ## Equipe
 
-| Integrante | RM |
-|---|---:|
-| Erick Miguel | 564896 |
-| Leonardo Melo | 567097 |
-| Luna Oliveira | 564215 |
+**Curso:** Tecnologia em Inteligência Artificial  
+**Turma:** 2TIAPR-2026  
+**Instituição:** FIAP
+
+| Integrante | RM | GitHub |
+|---|---:|---|
+| Erick Miguel | 564896 | [lostgear84](https://github.com/lostgear84) |
+| Leonardo Melo | 567097 | [meloleonardo-dev](https://github.com/meloleonardo-dev) |
+| Luna Oliveira | 564215 | [LunaRousseau](https://github.com/LunaRousseau) |
+
+## Projeto interdisciplinar
+
+O FOMEZERO foi desenvolvido como um projeto interdisciplinar. O lote de doação é o registro central que conecta as interfaces e os módulos das diferentes matérias.
+
+- **Frontend — este repositório:**  
+  https://github.com/lostgear84/FomeZero_FrontEnd
+
+- **Repositório unificado — projeto completo e materiais das demais disciplinas:**  
+  **[INSERIR AQUI O LINK DO REPOSITÓRIO UNIFICADO]**
+
+O repositório unificado complementa esta entrega com a visão geral do projeto. O código e a documentação necessários para avaliar o frontend estão neste repositório.
+
+### Repositórios dos módulos
+
+| Módulo | Repositório |
+|---|---|
+| AI for Robotic Process Automation — AIPA | [Acessar repositório](https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_AIPA) |
+| Generative AI & Advanced Nets — GENAI | [Acessar repositório](https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_GENAI) |
+| Processamento de Linguagem Natural — PLN | [Acessar repositório](https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_PLN) |
+| Visão Computacional — VCIA | [Acessar repositório](https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_VISAO_COMPUTACIONAL) |
+| IoT | [Acessar repositório](https://github.com/lostgear84/fomezero-iot) |
+| GABA | [Acessar repositório](https://github.com/lostgear84/GS_2TIAPR_2026_FOMEZERO_GABA) |
 
 ## Problema escolhido
 
-O desperdício de alimentos e a insegurança alimentar afetam diferentes públicos e exigem organização entre quem doa, quem recebe e quem solicita apoio. O FOMEZERO representa esse fluxo por meio do lote de doação, registro central que reúne doador, alimento, quantidade, condição informada e acompanhamento posterior.
+O desperdício de alimentos e a insegurança alimentar motivam uma solução que facilite a organização de doações e o acesso às informações sobre elas.
 
-A solução busca apoiar a redução do desperdício, facilitar a consulta de doações e organizar solicitações de cidadãos em situação de vulnerabilidade alimentar.
+Estabelecimentos podem ter alimentos disponíveis para doação, enquanto entidades sociais e cidadãos precisam localizar essas informações e acompanhar as etapas do recebimento.
+
+O FOMEZERO propõe uma interface para organizar esse fluxo, desde o cadastro do lote até a entrega e a apresentação do resultado de seu processamento.
 
 ## Público afetado
 
-- Doador: restaurante ou mercado responsável pelo cadastro do lote.
-- Beneficiário: ONG, cozinha comunitária ou cidadão que consulta lotes disponíveis.
-- Cidadão: pessoa que realiza uma solicitação e recebe uma resposta e uma ação sugerida.
-- Doador no Painel de Recompensas: acompanhamento de pontos, Selo Verde ESG e CO₂ evitado (estimativa) calculados pelo robô da AIPA.
+- **Doadores:** restaurantes, mercados e outros estabelecimentos com alimentos disponíveis para doação.
+- **Beneficiários:** ONGs, cozinhas comunitárias e cidadãos que consultam os lotes e registram o recebimento.
+- **Operadores FOMEZERO:** pessoas responsáveis pela análise de casos encaminhados à revisão humana.
 
-## Escopo do protótipo
+## Objetivo da solução
 
-Este repositório contém o frontend do FOMEZERO. Os dados são armazenados exclusivamente no navegador, sem backend, banco de dados externo ou sincronização entre dispositivos.
+Desenvolver uma interface acessível e responsiva que permita:
 
-A autenticação é local e demonstrativa. Ela permite validar o fluxo de acesso por perfil, mas não substitui autenticação profissional, recuperação de senha, criptografia de senha ou proteção de dados em produção.
+- Cadastrar e consultar lotes de doação.
+- Registrar uma solicitação do cidadão e apresentar uma resposta ou ação sugerida.
+- Confirmar entregas e informar possíveis problemas.
+- Exibir os resultados devolvidos pelos módulos integrados.
+- Apresentar pendências e situações que exigem análise humana.
+- Acompanhar recompensas demonstrativas vinculadas ao Doador.
+
+Os benefícios apresentados são propostas do protótipo. Não representam redução de fome, desperdício ou emissões já medida em operação real.
+
+## Tecnologias e justificativas
+
+| Tecnologia ou abordagem | Uso no projeto |
+|---|---|
+| React | Construção das telas por componentes, com props e estado |
+| Vite | Ambiente de desenvolvimento e geração do build do frontend |
+| React Router | Navegação entre as páginas e organização das áreas por perfil |
+| Contexto de autenticação | Compartilhamento do usuário e da sessão entre componentes |
+| `localStorage` | Persistência demonstrativa de cadastros, lotes, entregas e resultados no navegador |
+| CSS | Identidade visual, responsividade e apresentação dos estados da interface |
+| Serviços JavaScript | Separação entre as telas, a persistência e a comunicação com os módulos |
+
+O armazenamento local permite demonstrar persistência sem depender de um backend compartilhado de contas e lotes. Essa escolha também limita o protótipo: os dados não são sincronizados entre dispositivos.
 
 ## Funcionalidades implementadas
 
+### Acesso e navegação
+
 - Cadastro local de Doador, Beneficiário ou Operador FOMEZERO.
-- Login local com validação de e-mail e senha.
-- Sessão persistida no navegador.
-- Proteção de rotas por tipo de conta.
+- Login local.
+- Persistência da sessão no navegador.
+- Restrição demonstrativa de rotas conforme a sessão e o perfil.
+- Menus e atalhos específicos para cada área.
+
+### Lotes e consultas
+
 - Cadastro de lote de doação.
-- Consulta dos lotes cadastrados pelo Doador.
-- Consulta de lotes disponíveis pelo Beneficiário, com busca.
-- Solicitação do cidadão processada por regras locais simuladas.
-- Exibição de resposta e ação sugerida após o processamento.
-- Geração explícita de lotes fictícios com identificadores `DEMO-`.
-- Registro da entrega do lote pelo Beneficiário (kg recebidos, problemas marcados e texto de confirmação), processado na hora pelo robô da AIPA (serviço local), com exportação em JSON como alternativa.
-- Perfil **Operador FOMEZERO** com a tela de revisão humana (`/operador`): fila dos lotes que a AIPA não validou sozinha, com motivos, kg cadastrado × informado × lido no texto, triagem por foto e IoT; aprovar (com os kg aprovados) gera as recompensas, reprovar encerra sem pontos. O operador é registrado por código, nunca pelo nome.
-- Certificado do Selo Verde ESG em PDF: quando a AIPA atribui o selo, o Painel de Recompensas mostra o botão "Baixar certificado do Selo" (gerado e conferido pelo serviço local da AIPA; reconhecimento interno, não certificação).
-- Faixa abaixo do cabeçalho com a situação dos módulos de IA (AIPA, VCIA e GENAI: no ar, fora do ar ou simulado), atualizado a cada 30 s.
-- Painel de Recompensas do Doador com os resultados da AIPA (atualizados automaticamente ou importados): pontos, Selo Verde ESG, progresso até o próximo selo, CO₂ evitado (estimativa, com metodologia), Termo de Doação em PDF e lotes em revisão humana.
-- Assistente de dúvidas para doadores (Generative AI & Advanced Nets), com respostas citando documentos oficiais, em modo simulado ou integrado.
-- Triagem inteligente por foto (Visão Computacional), com o modelo real de visão computacional, ligada ao cadastro do lote; itens com sinais visuais de deterioração seguem para compostagem.
-- Nome oficial da matéria entre parênteses ao lado dos títulos de cada módulo (por exemplo, "Triagem inteligente por foto (Visão Computacional)"), para o professor localizar a sua disciplina no portal.
-- Identidade visual própria do FOMEZERO, inspirada em apps de delivery (ver "Identidade visual").
+- Consulta dos lotes vinculados ao Doador.
+- Consulta e busca de lotes disponíveis pelo Beneficiário.
+- Persistência dos registros no navegador.
+- Geração identificada de lotes fictícios com prefixo `DEMO-`.
 
-## Identidade visual
+### Solicitação do cidadão
 
-Projeto acadêmico com visual inspirado em apps de delivery de comida, mantendo a marca FOMEZERO (logos do grupo em `src/assets/marca/`).
+- Entrada de uma solicitação em texto.
+- Processamento por regras locais simuladas.
+- Exibição da resposta e da ação sugerida.
+- Identificação explícita da natureza simulada do processamento.
 
-- **Cores:** vermelho `#EA1D2C` (marca) e `#EB0033` (destaques), texto `#3E3E3E`, títulos `#1A1A1A`, cinzas `#717171`, `#ADADAD` e `#F7F7F7`, creme `#F9F2E8` nos avisos. Definidas como variáveis no início de `src/index.css`.
-- **Tipografia:** Nunito (títulos e botões) e Nunito Sans (texto), do Google Fonts. Sem internet, o navegador usa uma fonte do sistema.
-- **Logos:** o logo principal (branco sobre vermelho) aparece no login, no cadastro e no cabeçalho; o logo invertido (vermelho) aparece transparente como marca d'água nas páginas internas e no rodapé.
-- **Selos:** as imagens do Selo Verde ESG (Bronze, Prata e Ouro) aparecem no Painel de Recompensas, apagadas até a AIPA atribuir o nível.
-- **Componentes:** botões em pílula, cartões arredondados com sombra suave, atalhos com ícone nas telas iniciais e faixa com a situação dos módulos de IA.
+### Entregas e recompensas
 
-| Módulo no portal | Matéria |
-|---|---|
-| Triagem inteligente por foto | Visão Computacional |
-| Assistente de dúvidas | Generative AI & Advanced Nets |
-| Registro de entrega, Painel de Recompensas, Revisão humana e certificado | AI for Robotic Process Automation |
-| Registros IoT do lote | Physical Computing, Embedded AI, Robotics & Cognitive IoT |
-| Portal (este repositório) | Front End & Mobile Development |
+- Registro da quantidade recebida.
+- Marcação de problemas na entrega.
+- Confirmação em texto livre.
+- Envio da entrega ao serviço local da AIPA.
+- Tratamento de entregas pendentes quando o serviço está indisponível.
+- Exportação e importação por arquivos como alternativa.
+- Consulta dos resultados no Painel de Recompensas.
+- Revisão humana pelo perfil Operador.
+- Acesso ao Termo de Doação e, quando atribuído pela AIPA, ao certificado do Selo Verde ESG.
 
-## Arquitetura do frontend
+### Interfaces dos módulos interdisciplinares
+
+- Assistente de dúvidas do Doador, em modo simulado ou integrado à GENAI.
+- Triagem por foto integrada à VCIA.
+- Importação e visualização de registros históricos IoT.
+- Indicação da situação dos serviços na interface.
+
+## Fluxo central da disciplina
+
+A solicitação do cidadão conecta uma entrada a um processamento e apresenta o resultado na interface:
 
 ```text
-frontend/src/
-├── assets/marca/            # logos e selos do FOMEZERO
-├── components/
-│   ├── AtalhoAcao.jsx
-│   ├── GeradorLotesDemo.jsx
-│   ├── ImportadorIot.jsx
-│   ├── Layout.jsx
-│   ├── Materia.jsx
-│   ├── ProtectedRoute.jsx
-│   ├── StatusServicos.jsx
-│   └── TelaAutenticacao.jsx
-├── context/
-│   ├── AuthContext.jsx
-│   └── auth.js
-├── data/
-│   ├── genai_respostas_SIMULADO.json
-│   └── seed.js
-├── pages/
-│   ├── AssistenteConsulta.jsx
-│   ├── BeneficiarioHome.jsx
-│   ├── Cadastro.jsx
-│   ├── CadastroLote.jsx
-│   ├── DoadorHome.jsx
-│   ├── Login.jsx
-│   ├── LotesDisponiveis.jsx
-│   ├── MeusLotes.jsx
-│   ├── PainelRecompensas.jsx
-│   ├── RegistrarEntrega.jsx
-│   ├── RevisaoHumana.jsx
-│   ├── SolicitacaoCidadao.jsx
-│   └── TriagemInteligente.jsx
-├── services/
-│   ├── aipaService.js
-│   ├── assistenteService.js
-│   ├── entregasService.js
-│   ├── lotesService.js
-│   ├── solicitacaoService.js
-│   └── triagemService.js
-├── App.jsx
-├── index.css                # identidade visual (variáveis de cor e fonte)
-├── materias.js              # nomes oficiais das matérias
-└── main.jsx
+Cidadão registra uma solicitação
+                ↓
+Regras locais simuladas processam a entrada
+                ↓
+Portal apresenta uma resposta e uma ação sugerida
 ```
+
+Essa funcionalidade é uma simulação baseada em regras. Ela não deve ser apresentada como um modelo de inteligência artificial treinado.
+
+## Fluxo de entrega integrado à AIPA
+
+```text
+Doador cadastra o lote
+                ↓
+Beneficiário consulta e registra a entrega
+                ↓
+Frontend monta os dados no formato CT-03
+                ↓
+Serviço local da AIPA processa a entrega
+                ↓
+AIPA devolve resultado CT-04 ou encaminha à revisão humana
+                ↓
+Doador acompanha o resultado no Painel de Recompensas
+```
+
+O identificador `lote_id` relaciona o cadastro, a entrega e o resultado do processamento.
+
+O cadastro do lote não gera pontos por si só. No fluxo integrado, os pontos, o selo e a estimativa de CO₂ são devolvidos pela AIPA.
+
+Quando o serviço está indisponível, a entrega permanece registrada no navegador e pode ser enviada posteriormente.
+
+## Integrações e modos de execução
+
+| Módulo | Funcionamento no portal | Dependência ou limite |
+|---|---|---|
+| AIPA | Envio das entregas ao serviço local e leitura dos resultados | Exige o ambiente da AIPA; há alternativa por arquivos |
+| GENAI | Respostas previamente gravadas no modo simulado ou consulta ao serviço no modo integrado | O modo integrado depende do notebook e do endereço configurado |
+| VCIA | Envio de imagem ao aplicativo de triagem por foto | Exige o serviço; a análise é apoio visual, não laudo sanitário |
+| IoT | Importação e consulta de registros históricos | Não é conexão MQTT ao vivo |
+
+A visualização de registros IoT é uma funcionalidade distinta do envio das entregas. A existência de alertas na tela não deve ser interpretada, por si só, como comprovação de que esse histórico foi considerado pela AIPA.
+
+Os modos integrados fazem requisições aos serviços correspondentes. Portanto, embora os cadastros e registros do portal sejam mantidos localmente, nem todo processamento acontece exclusivamente no navegador.
 
 ## Componentes, props e estado
 
-| Elemento | Responsabilidade | Props e estado |
-|---|---|---|
-| `App` | Define as rotas e organiza a aplicação | Utiliza `BrowserRouter` e `Routes` |
-| `AuthProvider` | Disponibiliza o contexto de autenticação | Recebe `children`; mantém o estado `usuario` |
-| `ProtectedRoute` | Impede acesso de usuário não autenticado a rotas protegidas | Recebe `children` |
-| `Layout` | Estrutura visual, menu e navegação | Utiliza `Outlet` para renderizar as rotas internas |
-| `Login` | Realiza login local | Estados de e-mail, senha, erro e processamento |
-| `Cadastro` | Cria conta local de Doador, Beneficiário ou Operador | Estados de nome, e-mail, senha, perfil, erro e processamento |
-| `CadastroLote` | Cadastra um lote de doação | Estados de identificador, alimento, quantidade e condição |
-| `MeusLotes` | Consulta os lotes do Doador | Estados de dados e busca |
-| `LotesDisponiveis` | Consulta lotes disponíveis ao Beneficiário | Estados de dados, busca e mensagem |
-| `CartaoLote` | Apresenta um lote do Doador | Recebe a prop `lote` |
-| `CartaoLoteDisponivel` | Apresenta um lote disponível ao Beneficiário | Recebe a prop `lote` |
-| `SolicitacaoCidadao` | Recebe e processa a solicitação do cidadão | Estados de solicitação, texto processado, resultado e erro |
-| `PainelRecompensas` | Exibe o acompanhamento de recompensas | Utiliza o componente `IndicadorRecompensa` |
-| `IndicadorRecompensa` | Apresenta um indicador do painel | Recebe `titulo`, `valor` e `descricao` |
-| `GeradorLotesDemo` | Gera lotes fictícios para demonstração | Estados de confirmação, processamento, conclusão, mensagem e erro |
-| `TelaAutenticacao` | Moldura vermelha com o logo principal no login e no cadastro | Recebe `children` |
-| `AtalhoAcao` | Cartão de atalho com ícone nas telas iniciais | Recebe `para`, `icone`, `titulo` e `materia` |
-| `Materia` | Mostra o nome oficial da matéria entre parênteses | Recebe `de` (vcia, genai, aipa, iot ou femd) |
-| `StatusServicos` | Situação dos módulos de IA no topo das páginas | Estado `servicos`, atualizado a cada 30 s |
-| `GaleriaSelos` | Selos Bronze, Prata e Ouro no Painel de Recompensas | Recebe `seloAtual` (vindo da AIPA) |
-| `RevisaoHumana` | Fila de revisão humana do Operador | Estados de fila, erro, carregamento e decididos |
+A aplicação utiliza componentes reutilizáveis e separa as responsabilidades entre páginas, contexto e serviços.
 
-## Rotas e acesso
-
-| Rota | Acesso | Funcionalidade |
-|---|---|---|
-| `/login` | Público | Login local |
-| `/cadastro` | Público | Cadastro de Doador, Beneficiário ou Operador FOMEZERO |
-| `/` | Protegida | Redireciona para a área correspondente ao perfil |
-| `/doador` | Protegida | Área inicial do Doador |
-| `/doador/cadastro-lote` | Protegida | Cadastro de lote de doação |
-| `/doador/meus-lotes` | Protegida | Consulta dos lotes do Doador |
-| `/doador/assistente` | Protegida | Assistente de dúvidas (Generative AI & Advanced Nets) |
-| `/doador/triagem` | Protegida | Triagem inteligente por foto (Visão Computacional) |
-| `/beneficiario` | Protegida | Área inicial do Beneficiário |
-| `/beneficiario/lotes-disponiveis` | Protegida | Consulta de lotes disponíveis |
-| `/beneficiario/solicitacao` | Protegida | Solicitação do cidadão |
-| `/operador` | Protegida (Operador) | Fila de revisão humana da AIPA: aprovar ou reprovar |
-| `/beneficiario/registrar-entrega` | Protegida | Registro da entrega, processamento na AIPA e situação de cada entrega |
-| `/recompensas` | Protegida | Painel de Recompensas do Doador, com selos e certificado (AI for Robotic Process Automation) |
-| `*` | Público | Renderiza a tela de login para caminhos não reconhecidos |
-
-O componente `ProtectedRoute` verifica a sessão e restringe as áreas por perfil antes de renderizar o conteúdo protegido. Usuários não autenticados são direcionados para `/login`; usuários autenticados que tentam acessar a área de outro perfil são direcionados para sua própria área.
-
-## Cadastro e consulta de lotes
-
-O cadastro de lote utiliza os campos:
-
-- Identificador do lote.
-- Doador.
-- Alimento.
-- Quantidade em kg.
-- Condição informada pelo doador.
-
-Os lotes são persistidos no `localStorage` por meio do serviço `lotesService.js`. O Doador consulta os lotes vinculados à própria conta; o Beneficiário consulta os lotes disponíveis e pode utilizar a busca para localizar registros.
-
-Os lotes gerados pelo componente `GeradorLotesDemo` utilizam o prefixo `DEMO-` e são fictícios. Eles servem exclusivamente para demonstração da interface e não representam dispositivos IoT, leituras de sensores ou novos eventos físicos.
-
-## Processamento inteligente
-
-A solicitação do cidadão é processada por regras locais simuladas no serviço `solicitacaoService.js`. A interface recebe o texto informado, realiza o processamento, exibe a resposta gerada e apresenta a ação sugerida.
-
-Este processamento é uma simulação baseada em regras, não um modelo de inteligência artificial treinado. A interface identifica essa natureza para não induzir o usuário a erro.
-
-O cálculo de CO₂ não é feito pelo frontend. O valor exibido vem do robô da AIPA, como estimativa, com a metodologia e a fonte (FAO, 2013) mostradas no painel; a aprovação do método pelo grupo segue pendente.
-
-Além das regras locais, há dois processamentos com IA de outros módulos do FOMEZERO:
-
-- **Assistente de dúvidas (Generative AI & Advanced Nets):** RAG sobre o corpus de documentos oficiais da PLN (Lei 15.224/2025, RDC ANVISA 216/2004 e guias da ANVISA). Modo simulado (padrão): as 10 respostas reais gravadas pela GENAI em `src/data/genai_respostas_SIMULADO.json`. Modo integrado: o usuário informa o link do Gradio do notebook da GENAI e o frontend chama o endpoint `/consultar` com `@gradio/client`; se a conexão falhar, a tela avisa e volta ao modo simulado.
-- **Robô pós-entrega (AI for Robotic Process Automation):** a IA da AIPA lê a confirmação escrita pelo beneficiário, extrai os kg recebidos e identifica ocorrências; casos duvidosos vão para revisão humana. Ao confirmar a entrega, o frontend envia o lote ao serviço local da AIPA e mostra o resultado; sem o serviço, exporta e importa por arquivo.
-
-## Acessibilidade
-
-A interface foi revisada manualmente quanto aos seguintes aspectos:
-
-- Navegação por teclado com `Tab`, `Shift + Tab`, `Enter` e `Espaço`.
-- Foco visível nos elementos interativos.
-- Link para o conteúdo principal.
-- Formulários com `label` associado por `htmlFor`.
-- Interface revisada em largura aproximada de 375 px.
-- Interface revisada com ampliação de 200%.
-- Mensagens de erro, confirmação e pendência apresentadas na interface.
-
-Esses testes são uma revisão manual inicial. Não representam uma certificação completa de acessibilidade.
-
-## Proteção de dados
-
-- O protótipo utiliza dados fictícios.
-- Não são coletados dados pessoais reais de beneficiários.
-- Os cadastros, lotes e sessões permanecem no navegador do usuário.
-- Os fluxos implementados de cadastro, login, consulta, solicitação simulada e importação histórica IoT são locais. Não foi implementado envio desses dados a uma API externa nem conexão MQTT pelo frontend.
-- Não há chaves de API no código ou no repositório.
-- A senha é tratada como dado de demonstração e não como mecanismo de segurança production-ready.
-- Nenhum módulo declara que um alimento é seguro para consumo.
-
-## Relação com os ODS
-
-| ODS | Relação com o FOMEZERO |
+| Exemplo | Aplicação |
 |---|---|
-| ODS 2 — Fome Zero | Organiza o registro e a consulta de lotes de doação, apoiando o acesso a alimentos. |
-| ODS 12 — Consumo e Produção Responsáveis | Contribui para reduzir o desperdício ao organizar alimentos que poderiam ser desperdiçados. |
-| ODS 13 — Ação contra a Mudança Global do Clima | Reserva espaço para acompanhamento de impacto ambiental, sem calcular CO₂ sem metodologia validada. |
+| `TelaAutenticacao` | Recebe `children` e compartilha a estrutura visual de login e cadastro |
+| `AtalhoAcao` | Recebe propriedades para destino, ícone, título e matéria |
+| `ProtectedRoute` | Verifica a sessão e o perfil antes de apresentar as páginas |
+| `StatusServicos` | Mantém o estado de disponibilidade dos módulos |
+| Páginas de cadastro | Mantêm estados dos campos, mensagens e envio |
+| Contexto de autenticação | Disponibiliza o usuário autenticado para os componentes |
+| Serviços | Organizam persistência, transformação dos dados e chamadas aos módulos |
 
-## Situação das integrações
+## Estrutura do projeto
 
-| Integração | Status | Pendência |
-|---|---|---|
-| AIPA | Integrada (serviço local) | Confirmação da entrega → `POST /api/lotes` do `servico_aipa.py` (`http://127.0.0.1:5070`) → robô completo → CT-04 no Painel. Sem o serviço: arquivos `lotes_entregues.json` / `ct04_lotes.json`. Regras de pontos e selo de demonstração, pendentes de aprovação do grupo |
-| GENAI | Integrada (simulado e integrado) | Modo integrado depende do notebook da GENAI no Colab (link temporário) |
-| IoT | Parcial — importação histórica implementada | Conexão ao vivo não implementada |
-| VCIA | Integrada (modelo real, app local) | Triagem inteligente em `/doador/triagem`; depende do app da VCIA rodando em `http://127.0.0.1:7860` (ou link `gradio.live`) |
-
-O Painel de Recompensas só exibe pontos, selo e CO₂ evitado que vieram do robô da AIPA, com a regra e a fonte. Sem resultado importado, mostra "Sem pontos lançados" e "Não calculado" (nunca zero).
-
-Fluxo para demonstrar a AIPA:
-
-1. No repositório da AIPA (https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_AIPA), suba o serviço local: `python servico_aipa.py` (porta 5070).
-2. Doador cadastra lotes (opcionalmente pela triagem por foto, ou gera os lotes `DEMO-`).
-3. Beneficiário registra a entrega em `/beneficiario/registrar-entrega`: kg recebidos, problemas marcados e texto. O robô roda na hora (cerca de 8 s) e a tela mostra se a entrega foi validada ou foi para revisão humana, e por quê.
-4. Doador abre o Painel de Recompensas: pontos, Selo Verde ESG, CO₂ evitado e o Termo de Doação em PDF já aparecem ("Atualizar resultados da AIPA" relê o serviço).
-
-Regras da AIPA que mandam para revisão humana (sem pontos): ocorrência ou baixa confiança na leitura do texto; kg que não bate (cadastrado × informado × escrito no texto, tolerância de 5% ou 0,5 kg); alerta de quebra da cadeia de frio da IoT; triagem por foto do cadastro inconclusiva, que pediu avaliação pessoal ou viu deterioração; qualquer problema marcado pelo beneficiário.
-
-Sem o serviço: "Exportar entregas para a AIPA (JSON)" → `AIPA/entrada/lotes_entregues.json` → `python executar_robo.py` → importar `saida/ct04/ct04_lotes.json` no Painel.
-
-Assistente da GENAI: https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_GENAI
-
-## Demonstração em um clique
-
-Com os repositórios da AIPA e da VCIA clonados ao lado deste (mesma pasta-mãe), rode no PowerShell, na raiz deste repositório:
-
-```powershell
-.\iniciar_demo.ps1
+```text
+frontend/
+├── src/
+│   ├── assets/       # Marca e recursos visuais
+│   ├── components/   # Componentes reutilizáveis e layout
+│   ├── context/      # Autenticação local e sessão
+│   ├── data/         # Dados e respostas simuladas
+│   ├── pages/        # Telas dos fluxos
+│   ├── services/     # Persistência e comunicação com módulos
+│   ├── App.jsx       # Composição e rotas
+│   ├── index.css     # Estilos e identidade visual
+│   └── main.jsx      # Entrada da aplicação
+└── package.json
 ```
 
-O script abre uma janela para cada serviço (AIPA em 5070, VCIA em 7860, portal em 5173), reaproveita o que já estiver no ar e abre o navegador. Pastas em outro lugar: `-PastaAipa`, `-PastaVcia`, `-PythonAipa`, `-PythonVcia`; sem a triagem: `-SemVcia`. Se o Windows bloquear o script, rode antes `Set-ExecutionPolicy -Scope Process Bypass` (vale só para aquela janela). A GENAI roda no Colab: cole o link `gradio.live` na tela do assistente ou use o modo simulado.
+## Rotas principais
 
-## Execução
+| Rota | Funcionalidade |
+|---|---|
+| `/login` | Login local |
+| `/cadastro` | Cadastro de conta |
+| `/doador` | Área inicial do Doador |
+| `/doador/cadastro-lote` | Cadastro de lote |
+| `/doador/meus-lotes` | Consulta de lotes e importação histórica IoT |
+| `/doador/assistente` | Assistente de dúvidas |
+| `/doador/triagem` | Triagem por foto |
+| `/beneficiario` | Área inicial do Beneficiário |
+| `/beneficiario/lotes-disponiveis` | Consulta dos lotes disponíveis |
+| `/beneficiario/solicitacao` | Solicitação do cidadão |
+| `/beneficiario/registrar-entrega` | Registro de entrega |
+| `/operador` | Revisão humana |
+| `/recompensas` | Painel de Recompensas |
 
-Na pasta `frontend/`:
+A restrição de acesso implementada no frontend tem finalidade demonstrativa. Ela não substitui autenticação e autorização em um servidor de produção.
+
+## Instalação e execução
+
+### Pré-requisitos
+
+- Git.
+- Node.js e npm.
+- Navegador atualizado.
+
+Os módulos Python possuem dependências próprias, descritas nos respectivos repositórios.
+
+### Executar o frontend
 
 ```bash
+git clone [https://github.com/lostgear84/FomeZero_FrontEnd.git](https://github.com/lostgear84/FomeZero_FrontEnd.git)
+cd FomeZero_FrontEnd/frontend
 npm install
 npm run dev
 ```
 
-Verificações:
+Abra o endereço informado pelo Vite no terminal.
+
+O frontend pode ser iniciado sem os serviços de IA. As funcionalidades integradas, entretanto, dependem da disponibilidade dos módulos correspondentes.
+
+### Verificações técnicas
+
+Na pasta `frontend/`, execute:
 
 ```bash
 npm run lint
 npm run build
 ```
 
-## Evidências de validação
+- `npm run lint`: análise estática do código.
+- `npm run build`: geração do build do frontend.
 
-Os testes realizados estão registrados em `EVIDENCIAS_VALIDACAO.md`. Eles incluem login, cadastro, consultas, solicitação simulada, geração de lotes fictícios, lint, build, navegação por teclado, foco visível, responsividade e ampliação.
+Essas verificações não substituem os testes funcionais, de acessibilidade ou de segurança.
 
-## Capturas do protótipo
+## Executar os serviços integrados
 
-As capturas estão organizadas no [índice de evidências visuais](docs/evidencias/README.md).
+### AIPA
 
-A sequência principal da demonstração inclui:
+No ambiente do repositório da AIPA:
 
-1. [Cadastro do lote](docs/evidencias/04-cadastro-lote.png).
-2. [Consulta pelo Doador](docs/evidencias/06-meus-lotes.png).
-3. [Consulta pelo Beneficiário](docs/evidencias/08-lotes-disponiveis.png).
-4. [Solicitação do cidadão](docs/evidencias/09-solicitacao.png).
-5. [Resposta simulada e ação sugerida](docs/evidencias/10-resposta-simulada.png).
+```bash
+python servico_aipa.py
+```
 
-As capturas complementam o relato dos testes e a demonstração ao vivo; não comprovam integrações que permanecem pendentes.
+Endereço local padrão:
 
-## Triagem inteligente por foto (Visão Computacional)
+```text
+http://127.0.0.1:5070
+```
 
-O doador acessa **Triagem inteligente por foto** (`/doador/triagem`), envia a foto de um item de hortifrúti e o
-frontend chama o modelo real de visão computacional do FOMEZERO (EfficientNet-B0, repositório
-https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_VISAO_COMPUTACIONAL) pelo endpoint `/triagem` do app
-Gradio, com `@gradio/client`. O resultado mostra a condição visual sugerida, a confiança, o produto reconhecido, o
-aviso de nitidez e o aviso de que a triagem não é laudo.
+### Visão Computacional
 
-- **Uso no cadastro:** "Usar no cadastro do lote" leva ao formulário com o texto sugerido em "Condição informada pelo
-  doador" (editável) e anexa o resumo da triagem ao lote (classe, confiança, produto, modelo, data). A foto **não** é
-  guardada.
-- **Sinais visuais de deterioração:** o lote é registrado com destino **compostagem** e não aparece em "Lotes
-  disponíveis" nem em "Registrar entrega".
-- **Inconclusivo ou foto borrada:** a tela pede outra foto; se o doador seguir, o cadastro avisa que precisa de
-  avaliação pessoal.
-- **Validação da imagem:** só JPEG ou PNG (conferido pela assinatura do arquivo), até 5 MB.
-- **Serviço fora do ar:** mensagem explicando que o app da VCIA precisa estar rodando.
-- **Limite:** a triagem é opcional; ela apoia o doador e não substitui a avaliação pessoal nem a vigilância sanitária.
+No ambiente do repositório da VCIA:
 
-Para subir o modelo (no repositório da VCIA, ambiente com `torch`, `torchvision`, `gradio`, `opencv-python-headless`,
-`scikit-learn`, `matplotlib`): `python app/app.py` (abre em `http://127.0.0.1:7860`). O endereço pode ser trocado na
-própria tela ou pela variável `VITE_VCIA_URL`.
+```bash
+python app/app.py
+```
 
-## Importação histórica de registros IoT
+O endereço do serviço pode ser configurado na interface.
 
-Na tela Meus lotes, o Doador pode importar um arquivo `.log` ou `.txt`
-com até 2 MB, no formato tópico MQTT seguido de JSON por linha.
+### GENAI
 
-### Escopo implementado
+Utilize uma das opções:
 
-- Leitura dos schemas `fomezero.telemetria.v1` e `fomezero.alerta.v1`.
+- Modo simulado, com respostas previamente gravadas.
+- Modo integrado, com o notebook em execução e o endereço configurado na tela do assistente.
+
+### Inicialização no Windows
+
+Há um iniciador opcional na raiz do repositório:
+
+```powershell
+.\iniciar_demo.ps1
+```
+
+O script pressupõe os repositórios e ambientes necessários disponíveis. Consulte o próprio script e a documentação dos módulos para ajustar caminhos.
+
+No Linux, execute o frontend e os serviços necessários em terminais separados, utilizando os ambientes correspondentes.
+
+## Alternativa por arquivos para a AIPA
+
+Quando não for utilizado o serviço local:
+
+1. Registre a entrega.
+2. Exporte o arquivo `lotes_entregues.json`.
+3. Coloque o arquivo em `AIPA/entrada/lotes_entregues.json`.
+4. Execute o robô no ambiente da AIPA:
+
+   ```bash
+   python executar_robo.py
+   ```
+
+5. Importe `saida/ct04/ct04_lotes.json` pelo Painel de Recompensas.
+
+Esse caminho exige o repositório e o ambiente da AIPA.
+
+## Importação histórica IoT
+
+Na tela Meus lotes, o Doador pode importar um arquivo `.log` ou `.txt`, com até 2 MB, contendo tópico MQTT seguido de JSON por linha.
+
+O escopo documentado inclui:
+
+- Schemas `fomezero.telemetria.v1` e `fomezero.alerta.v1`.
 - Associação ao lote `LOTE-2026-0001` da conta autenticada.
 - Identificação do dispositivo `esp32-caixa-01`.
-- Exibição dos estados informados pelo IoT, sem recalculá-los pela temperatura.
-- Filtro de eventos de alerta e normalização.
-- Campos ausentes apresentados como não informados.
+- Exibição de estados e eventos informados pelo dispositivo.
+- Filtro de alertas e normalizações.
+- Apresentação de campos ausentes como não informados.
 - Temperatura sentinela `-127` apresentada como falha de leitura.
-- ACKs, status e registros não associados ao lote da conta são ignorados.
-- Registros idênticos repetidos no mesmo arquivo são desconsiderados.
-- Uma nova importação bem-sucedida substitui a visualização anterior.
-- A limpeza da visualização não apaga os lotes cadastrados.
 
-### Limitações
+A importação é histórica. Não há conexão MQTT ao vivo pelo frontend.
 
-A importação é uma visualização histórica local, não monitoramento ao vivo.
-Os registros importados ficam apenas no estado da tela, sem persistência
-após recarga ou saída da página.
+O estado `FRIO_OK` é uma informação técnica do dispositivo, não uma garantia de segurança do alimento.
 
-Não há conexão MQTT, publicação de mensagens, alteração do firmware,
-geração de recompensas ou validação sanitária.
+## Acessibilidade
 
-A normalização não apaga ocorrências anteriores. O estado `FRIO_OK`
-é uma informação técnica do dispositivo, não garantia de alimento seguro.
+O projeto registra revisão manual dos seguintes aspectos:
 
-O log utilizado na validação foi `mqtt-20261111-102301.log`.
-O arquivo original não é incluído automaticamente no repositório.
- 
+- Navegação por teclado com `Tab`, `Shift + Tab`, `Enter` e `Espaço`.
+- Foco visível nos elementos interativos.
+- Link para o conteúdo principal.
+- Rótulos associados aos campos dos formulários.
+- Mensagens de erro, confirmação e pendência.
+- Interface em largura aproximada de 375 px.
+- Ampliação de 200%.
 
- (Esse projeto foi desenvolvido em conjunto em novembro de 2026)
- 
+Os procedimentos e resultados estão documentados em
+[EVIDENCIAS_VALIDACAO.md](EVIDENCIAS_VALIDACAO.md).
+
+Essas verificações são uma revisão manual inicial. Não representam certificação de conformidade integral de acessibilidade.
+
+## Proteção de dados pessoais
+
+O protótipo utiliza dados fictícios para representar contas, lotes e entregas.
+
+Cuidados adotados e limites:
+
+- Não utilizar dados reais de beneficiários em situação de vulnerabilidade.
+- Não publicar senhas, tokens ou informações pessoais nas capturas e arquivos de demonstração.
+- Não inserir chaves de API ou outros segredos no código e no repositório.
+- Não tratar variáveis expostas pelo Vite como armazenamento de segredos.
+- Considerar o login local como recurso demonstrativo, não segurança de produção.
+- Não tratar o armazenamento do navegador como banco seguro ou compartilhado.
+- Verificar o destino das requisições nos modos integrados.
+- Utilizar imagens fictícias ou adequadamente autorizadas na demonstração.
+
+A entrega é enviada à AIPA; a imagem é enviada à VCIA; e a pergunta é enviada à GENAI quando seu modo integrado é utilizado.
+
+Nenhuma funcionalidade do portal garante que um alimento seja seguro para consumo.
+
+## Relação com os Objetivos de Desenvolvimento Sustentável
+
+| ODS | Relação proposta com o FOMEZERO |
+|---|---|
+| ODS 2 — Fome Zero e Agricultura Sustentável | Apoiar a organização das doações e o acesso às informações sobre alimentos disponíveis |
+| ODS 12 — Consumo e Produção Responsáveis | Organizar registros e fluxos que apoiem o enfrentamento do desperdício de alimentos |
+| ODS 13 — Ação Contra a Mudança Global do Clima | Apresentar uma estimativa ambiental associada ao fluxo das doações |
+
+O CO₂ evitado exibido no painel é uma estimativa devolvida pela AIPA, não uma medição direta.
+
+A metodologia e os parâmetros devem ser consultados no módulo responsável. O registro de validação identifica a aprovação do método pelo grupo como pendência.
+
+O Selo Verde ESG é um reconhecimento interno do protótipo, não uma certificação externa.
+
+O projeto não apresenta impactos sociais ou ambientais como resultados já medidos em operação real.
+
+## Evidências de validação
+
+Os materiais estão organizados em:
+
+- [Registro de testes e limitações](EVIDENCIAS_VALIDACAO.md).
+- [Índice das capturas do protótipo](docs/evidencias/README.md).
+- [Roteiro de apresentação](ROTEIRO_APRESENTACAO.md).
+
+O registro contém etapas de validação dos fluxos básicos, acessibilidade, importação histórica IoT, integrações, revisão humana, identidade visual e certificado do selo.
+
+Há registros de execução de lint e build sem erros nas datas documentadas.
+
+### Como interpretar as evidências
+
+- Os resultados são relatos dos responsáveis nas datas indicadas.
+- Uma captura isolada não comprova todo o comportamento da funcionalidade.
+- Testes anteriores não significam que todos os cenários foram repetidos após cada alteração.
+- Os testes automáticos da AIPA citados no registro pertencem àquele módulo, não a uma suíte automática do frontend.
+- As evidências não constituem certificação de acessibilidade ou segurança.
+
+## Evolução e contribuição da equipe
+
+O histórico do repositório registra a evolução do projeto por commits e Pull Requests.
+
+- [Histórico de commits](https://github.com/lostgear84/FomeZero_FrontEnd/commits/master/).
+- [Pull Requests](https://github.com/lostgear84/FomeZero_FrontEnd/pulls?q=is%3Apr).
+- [Contribuidores](https://github.com/lostgear84/FomeZero_FrontEnd/graphs/contributors).
+
+A autoria deve refletir a participação real de cada integrante. O histórico permite consultar as alterações realizadas e sua evolução.
+
+## Benefícios propostos para o cidadão
+
+- Acesso organizado às informações sobre os lotes disponíveis.
+- Orientação após o registro de uma solicitação.
+- Maior clareza sobre entregas, problemas e pendências.
+- Possibilidade de análise humana dos casos que exigem revisão.
+- Incentivo à participação de doadores por meio de recompensas demonstrativas.
+
+A avaliação desses benefícios em uso real depende de estudos e validações posteriores.
+
+## Limitações do protótipo
+
+- Não há sincronização dos dados locais entre dispositivos.
+- Não há autenticação de produção nem backend compartilhado de contas e lotes.
+- A solicitação do cidadão utiliza processamento simulado por regras.
+- Os serviços integrados precisam estar disponíveis no ambiente da demonstração.
+- A importação IoT é histórica, não conexão ao vivo.
+- As regras de recompensa e a metodologia ambiental são de demonstração e exigem alinhamento da equipe.
+- Cadastro, entrega registrada e triagem não comprovam segurança sanitária.
+- Não há comprovação de impacto social ou ambiental medido em operação real.
+
+## Apresentação da Global Solution
+
+A demonstração apresenta:
+
+1. O problema escolhido e o público afetado.
+2. As justificativas das escolhas técnicas.
+3. O cadastro e a consulta de lotes.
+4. A persistência no navegador.
+5. A solicitação do cidadão, seu processamento e a resposta apresentada.
+6. O fluxo integrado de entrega e acompanhamento do resultado.
+7. Os cuidados de acessibilidade e proteção de dados.
+8. As evidências de validação e a evolução do código.
+9. A relação com os ODS e os benefícios propostos para o cidadão.
+
+## Entrega acadêmica
+
+O arquivo [ENTREGA_FEMD.txt](ENTREGA_FEMD.txt) identifica os integrantes e o endereço deste repositório.
+
+Este repositório contém a entrega de Front End & Mobile Development. A visão interdisciplinar do FOMEZERO está disponível no repositório unificado indicado no início deste documento.
