@@ -39,7 +39,7 @@ O repositório unificado complementa esta entrega com a visão geral do projeto.
 | Processamento de Linguagem Natural — PLN | [Acessar repositório](https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_PLN) |
 | Visão Computacional — VCIA | [Acessar repositório](https://github.com/meloleonardo-dev/GS_2TIAPR_2026_FOMEZERO_VISAO_COMPUTACIONAL) |
 | IoT | [Acessar repositório](https://github.com/lostgear84/fomezero-iot) |
-| GABA | [Acessar repositório](https://github.com/lostgear84/GS_2TIAPR_2026_FOMEZERO_GABA) |
+| Governança (unificado) | [Acessar repositório](https://github.com/lostgear84/GS_2TIAPR_2026_FOMEZERO_GABA) |
 
 ## Problema escolhido
 
