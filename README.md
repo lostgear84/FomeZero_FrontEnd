@@ -26,7 +26,7 @@ O FOMEZERO foi desenvolvido como um projeto interdisciplinar. O lote de doação
   https://github.com/lostgear84/FomeZero_FrontEnd
 
 - **Repositório unificado — projeto completo e materiais das demais disciplinas:**  
-  **[INSERIR AQUI O LINK DO REPOSITÓRIO UNIFICADO]**
+  https://github.com/lostgear84/GS_2TIAPR_2026_FOMEZERO_GABA)
 
 O repositório unificado complementa esta entrega com a visão geral do projeto. O código e a documentação necessários para avaliar o frontend estão neste repositório.
 
