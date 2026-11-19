@@ -41,6 +41,11 @@ O repositório unificado complementa esta entrega com a visão geral do projeto.
 | IoT | [Acessar repositório](https://github.com/lostgear84/fomezero-iot) |
 | Governança (unificado) | [Acessar repositório](https://github.com/lostgear84/GS_2TIAPR_2026_FOMEZERO_GABA) |
 
+## Videos
+
+| Apresentação de FrontEnd | https://www.youtube.com/watch?v=-OZzN7P5308
+| Apresentação Geral | https://www.youtube.com/watch?v=2O9By9voZGg
+
 ## Problema escolhido
 
 O desperdício de alimentos e a insegurança alimentar motivam uma solução que facilite a organização de doações e o acesso às informações sobre elas.
@@ -401,7 +406,7 @@ Os materiais estão organizados em:
 
 - [Registro de testes e limitações](EVIDENCIAS_VALIDACAO.md).
 - [Índice das capturas do protótipo](docs/evidencias/README.md).
-- [Roteiro de apresentação](ROTEIRO_APRESENTACAO.md).
+
 
 O registro contém etapas de validação dos fluxos básicos, acessibilidade, importação histórica IoT, integrações, revisão humana, identidade visual e certificado do selo.
 
@@ -460,8 +465,5 @@ A demonstração apresenta:
 8. As evidências de validação e a evolução do código.
 9. A relação com os ODS e os benefícios propostos para o cidadão.
 
-## Entrega acadêmica
-
-O arquivo [ENTREGA_FEMD.txt](ENTREGA_FEMD.txt) identifica os integrantes e o endereço deste repositório.
 
 Este repositório contém a entrega de Front End & Mobile Development. A visão interdisciplinar do FOMEZERO está disponível no repositório unificado indicado no início deste documento.
